@@ -10,7 +10,7 @@ namespace LibraryManagement.Models
         public long IdBook { get; set; }
         public string StartDate { get; set; }
         public string EndDate { get; set; }
-        public bool IsExprire { get; set; }
+        public byte NumberOfDays { get; set; }
 
         public Book IdBookNavigation { get; set; }
         public User IdUserNavigation { get; set; }

@@ -18,18 +18,19 @@ namespace LibraryManagement.Data
         public virtual DbSet<Book> Book { get; set; }
         public virtual DbSet<BookGenre> BookGenre { get; set; }
         public virtual DbSet<Genre> Genre { get; set; }
+        public virtual DbSet<Policy> Policy { get; set; }
         public virtual DbSet<Role> Role { get; set; }
         public virtual DbSet<User> User { get; set; }
         public virtual DbSet<UserBook> UserBook { get; set; }
 
-//        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-//        {
-//            if (!optionsBuilder.IsConfigured)
-//            {
-//#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-//                optionsBuilder.UseSqlServer("Server=.\\MKServer;Database=LibraryManagement;Trusted_Connection=True;");
-//            }
-//        }
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            if (!optionsBuilder.IsConfigured)
+            {
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
+                optionsBuilder.UseSqlServer("Server=.\\MKServer;Database=LibraryManagement;Trusted_Connection=True;");
+            }
+        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -76,6 +77,22 @@ namespace LibraryManagement.Data
                     .HasMaxLength(20);
             });
 
+            modelBuilder.Entity<Policy>(entity =>
+            {
+                entity.Property(e => e.Id).ValueGeneratedNever();
+
+                entity.Property(e => e.Comment).HasMaxLength(150);
+
+                entity.Property(e => e.Keyword)
+                    .IsRequired()
+                    .HasMaxLength(20);
+
+                entity.Property(e => e.Value)
+                    .IsRequired()
+                    .HasColumnName("value")
+                    .HasMaxLength(50);
+            });
+
             modelBuilder.Entity<Role>(entity =>
             {
                 entity.Property(e => e.Id).ValueGeneratedOnAdd();
@@ -98,6 +115,10 @@ namespace LibraryManagement.Data
                 entity.Property(e => e.Phone)
                     .IsRequired()
                     .HasMaxLength(15);
+
+                entity.Property(e => e.UserName)
+                    .IsRequired()
+                    .HasMaxLength(20);
 
                 entity.Property(e => e.YearOfBirth)
                     .IsRequired()
