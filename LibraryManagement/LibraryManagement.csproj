@@ -5,16 +5,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Controllers\a.cs.bk" />
-    <None Remove="Controllers\ValuesController.cs.bk" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Compile Include="Controllers\a.cs.bk" />
-    <Compile Include="Controllers\ValuesController.cs.bk" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.1.4" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="2.1.4">
@@ -28,6 +18,7 @@
 
   <ItemGroup>
     <Folder Include="Services\" />
+    <Folder Include="wwwroot\" />
   </ItemGroup>
 
 </Project>
