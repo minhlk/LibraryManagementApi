@@ -1,0 +1,116 @@
+﻿using LibraryManagement.Models;
+using Microsoft.EntityFrameworkCore;
+
+namespace LibraryManagement.Data
+{
+    public partial class LibraryManagementContext : DbContext
+    {
+        public LibraryManagementContext()
+        {
+        }
+
+        public LibraryManagementContext(DbContextOptions<LibraryManagementContext> options)
+            : base(options)
+        {
+        }
+
+        public virtual DbSet<Author> Author { get; set; }
+        public virtual DbSet<Book> Book { get; set; }
+        public virtual DbSet<BookGenre> BookGenre { get; set; }
+        public virtual DbSet<Genre> Genre { get; set; }
+        public virtual DbSet<User> User { get; set; }
+        public virtual DbSet<UserBook> UserBook { get; set; }
+
+//        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+//        {
+//            if (!optionsBuilder.IsConfigured)
+//            {
+//#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
+//                optionsBuilder.UseSqlServer("Server=.\\MKServer;Database=LibraryManagement;Trusted_Connection=True;");
+//            }
+//        }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Author>(entity =>
+            {
+                entity.Property(e => e.Name)
+                    .IsRequired()
+                    .HasMaxLength(50);
+
+                entity.Property(e => e.YearOfBirth)
+                    .HasMaxLength(4)
+                    .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<Book>(entity =>
+            {
+                entity.Property(e => e.Name)
+                    .IsRequired()
+                    .HasMaxLength(35);
+
+                entity.HasOne(d => d.IdAuthorNavigation)
+                    .WithMany(p => p.Book)
+                    .HasForeignKey(d => d.IdAuthor)
+                    .HasConstraintName("FK_Book_Author");
+            });
+
+            modelBuilder.Entity<BookGenre>(entity =>
+            {
+                entity.HasOne(d => d.IdBookNavigation)
+                    .WithMany(p => p.BookGenre)
+                    .HasForeignKey(d => d.IdBook)
+                    .HasConstraintName("FK_BookGenre_Book");
+
+                entity.HasOne(d => d.IdGenreNavigation)
+                    .WithMany(p => p.BookGenre)
+                    .HasForeignKey(d => d.IdGenre)
+                    .HasConstraintName("FK_BookGenre_Genre");
+            });
+
+            modelBuilder.Entity<Genre>(entity =>
+            {
+                entity.Property(e => e.Name)
+                    .IsRequired()
+                    .HasMaxLength(20);
+            });
+
+            modelBuilder.Entity<User>(entity =>
+            {
+                entity.Property(e => e.Name)
+                    .IsRequired()
+                    .HasMaxLength(35);
+
+                entity.Property(e => e.Phone)
+                    .IsRequired()
+                    .HasMaxLength(15);
+
+                entity.Property(e => e.YearOfBirth)
+                    .IsRequired()
+                    .HasMaxLength(4)
+                    .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<UserBook>(entity =>
+            {
+                entity.Property(e => e.EndDate)
+                    .IsRequired()
+                    .HasMaxLength(8);
+
+                entity.Property(e => e.StartDate)
+                    .IsRequired()
+                    .HasMaxLength(8);
+
+                entity.HasOne(d => d.IdBookNavigation)
+                    .WithMany(p => p.UserBook)
+                    .HasForeignKey(d => d.IdBook)
+                    .HasConstraintName("FK_UserBook_Book");
+
+                entity.HasOne(d => d.IdUserNavigation)
+                    .WithMany(p => p.UserBook)
+                    .HasForeignKey(d => d.IdUser)
+                    .HasConstraintName("FK_UserBook_User");
+            });
+        }
+    }
+}
