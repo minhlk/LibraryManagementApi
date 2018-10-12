@@ -12,10 +12,12 @@ namespace LibraryManagement.Models
 
         public long Id { get; set; }
         public string Name { get; set; }
-        public bool IdRole { get; set; }
+        public byte IdRole { get; set; }
         public string YearOfBirth { get; set; }
         public string Phone { get; set; }
+        public string Password { get; set; }
 
+        public Role IdRoleNavigation { get; set; }
         public ICollection<UserBook> UserBook { get; set; }
     }
 }

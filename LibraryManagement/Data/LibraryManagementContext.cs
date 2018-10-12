@@ -18,6 +18,7 @@ namespace LibraryManagement.Data
         public virtual DbSet<Book> Book { get; set; }
         public virtual DbSet<BookGenre> BookGenre { get; set; }
         public virtual DbSet<Genre> Genre { get; set; }
+        public virtual DbSet<Role> Role { get; set; }
         public virtual DbSet<User> User { get; set; }
         public virtual DbSet<UserBook> UserBook { get; set; }
 
@@ -75,11 +76,24 @@ namespace LibraryManagement.Data
                     .HasMaxLength(20);
             });
 
+            modelBuilder.Entity<Role>(entity =>
+            {
+                entity.Property(e => e.Id).ValueGeneratedOnAdd();
+
+                entity.Property(e => e.RoleName)
+                    .IsRequired()
+                    .HasMaxLength(25);
+            });
+
             modelBuilder.Entity<User>(entity =>
             {
                 entity.Property(e => e.Name)
                     .IsRequired()
                     .HasMaxLength(35);
+
+                entity.Property(e => e.Password)
+                    .IsRequired()
+                    .HasMaxLength(100);
 
                 entity.Property(e => e.Phone)
                     .IsRequired()
@@ -89,6 +103,12 @@ namespace LibraryManagement.Data
                     .IsRequired()
                     .HasMaxLength(4)
                     .IsUnicode(false);
+
+                entity.HasOne(d => d.IdRoleNavigation)
+                    .WithMany(p => p.User)
+                    .HasForeignKey(d => d.IdRole)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_User_Role");
             });
 
             modelBuilder.Entity<UserBook>(entity =>
