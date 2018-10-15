@@ -1,24 +1,31 @@
-﻿using LibraryManagement.Data.Interface;
+﻿using System;
+using LibraryManagement.Data.Interface;
 using LibraryManagement.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using LibraryManagement.Services;
+using Microsoft.AspNetCore.Authorization;
 
 namespace LibraryManagement.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class BooksController : ControllerBase
     {
         private readonly IBookRepository _bookRepository;
+        private readonly IUserService _userService;
 
-        public BooksController(IBookRepository bookRepository)
+        public BooksController(IBookRepository bookRepository, IUserService userService)
         {
             _bookRepository = bookRepository;
+            _userService = userService;
         }
         
 
-    // GET: api/Books
+        // GET: api/Books
+        [AllowAnonymous]
         [HttpGet]
         public async Task<IEnumerable<Book>> GetBook()
         {
@@ -26,6 +33,7 @@ namespace LibraryManagement.Controllers
         }
 
         // GET: api/Books/5
+//        [AllowAnonymous]
         [HttpGet("{id}")]
         public async Task<IActionResult> GetBook([FromRoute] int id)
         {
@@ -44,7 +52,7 @@ namespace LibraryManagement.Controllers
             return Ok(book);
         }
 
-//        // PUT: api/Books/5
+        // PUT: api/Books/5
         [HttpPut("{id}")]
         public async Task<IActionResult> PutBook([FromRoute] int id, [FromBody] Book book)
         {
@@ -97,10 +105,8 @@ namespace LibraryManagement.Controllers
             
             return Ok(book);
         }
+      
 
-//        private bool BookExists(long id)
-//        {
-//            return _bookRepository.Book.Any(e => e.Id == id);
-//        }
+
     }
 }
