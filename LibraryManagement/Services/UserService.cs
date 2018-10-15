@@ -3,8 +3,10 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using LibraryManagement.Config;
 using LibraryManagement.Data.Interface;
 using LibraryManagement.Models;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
 namespace LibraryManagement.Services
@@ -12,10 +14,11 @@ namespace LibraryManagement.Services
     public class UserService : IUserService
     {
         private readonly IUserRepository _userRepository;
-
-        public UserService(IUserRepository userRepository)
+        private readonly IOptions<AppSettings> _config;
+        public UserService(IUserRepository userRepository,IOptions<AppSettings> config)
         {
             this._userRepository = userRepository;
+            this._config = config;
         }
         public UserAuth Authenticate(string userName, string password)
         {
@@ -25,7 +28,7 @@ namespace LibraryManagement.Services
             if (user != null)
             {
                 var tokenHandler = new JwtSecurityTokenHandler();
-                var key = Encoding.ASCII.GetBytes("this is my custom Secret key for authnetication");
+                var key = Encoding.ASCII.GetBytes(_config.Value.Secret);
                 var tokenDescriptor = new SecurityTokenDescriptor
                 {
                     Subject = new ClaimsIdentity(new Claim[]
@@ -53,17 +56,15 @@ namespace LibraryManagement.Services
 
         }
 
-        public async Task Register(User user)
+        public async Task<User> Register(User user)
         {
-            
             //TODO : add logic check here and hash password
-             await _userRepository.CreateUserAsync(user);
+             return await _userRepository.CreateUserAsync(user);
         }
 
         public async Task<UserAuth> GetById(int userId)
         {
             var user = await _userRepository.GetUserByIdAsync(userId);
-            //TODO: add get service later
             return new UserAuth()
             {
                 UserName = user.UserName,

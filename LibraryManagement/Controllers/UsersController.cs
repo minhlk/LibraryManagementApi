@@ -104,8 +104,8 @@ namespace LibraryManagement.Controllers
             return Ok(user);
         }
         [AllowAnonymous]
-        [HttpPost("authenticate")]
-        public IActionResult Authenticate([FromBody]User userInfo)
+        [HttpPost("login")]
+        public IActionResult Login([FromBody]User userInfo)
         {
             var user = _userService.Authenticate(userInfo.UserName, userInfo.Password);
 
@@ -119,8 +119,10 @@ namespace LibraryManagement.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody]User userInfo)
         {
-            await _userService.Register(userInfo);
-            return Redirect("/api/books");
+            var user = await _userService.Register(userInfo);
+            if(user == null)
+                return BadRequest(new { message = "Your username already existed" });
+            return Ok();
         }
 
     }

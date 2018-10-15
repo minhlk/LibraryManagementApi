@@ -9,7 +9,7 @@ namespace LibraryManagement.Services
     public interface IUserService
     {
         UserAuth Authenticate(String userName, String password);
-        Task Register(User user);
+        Task<User> Register(User user);
         Task<UserAuth> GetById(int userId);
     }
 

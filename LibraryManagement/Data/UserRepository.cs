@@ -31,10 +31,19 @@ namespace LibraryManagement.Data
             return rs;
         }
 
-        public async Task CreateUserAsync(User user)
+        public async Task<User> CreateUserAsync(User user)
         {
-            Create(user);
-            await SaveAsync();
+            //Check if username exists 
+            if (this.RepositoryContext.User.FirstOrDefault(u => u.UserName == user.UserName) == null)
+            {
+                Create(user);
+                await SaveAsync();
+                return user;
+            }
+
+            return null;
+
+
         }
 
         public async Task UpdateUserAsync(int userId, User newUser)
@@ -60,7 +69,7 @@ namespace LibraryManagement.Data
 
         public User AuthenticateUser(string userName, string password)
         {
-            var user = this.RepositoryContext.User.First(u => u.Password == password && u.UserName == userName);
+            var user = this.RepositoryContext.User.FirstOrDefault(u => u.Password == password && u.UserName == userName);
             return user;
         }
     }

@@ -18,6 +18,7 @@ namespace LibraryManagement.Data
         public virtual DbSet<Book> Book { get; set; }
         public virtual DbSet<BookGenre> BookGenre { get; set; }
         public virtual DbSet<Genre> Genre { get; set; }
+        public virtual DbSet<Policy> Policy { get; set; }
         public virtual DbSet<Role> Role { get; set; }
         public virtual DbSet<User> User { get; set; }
         public virtual DbSet<UserBook> UserBook { get; set; }
@@ -68,7 +69,22 @@ namespace LibraryManagement.Data
                     .HasMaxLength(20);
             });
 
-           
+            modelBuilder.Entity<Policy>(entity =>
+            {
+                entity.Property(e => e.Id).ValueGeneratedNever();
+
+                entity.Property(e => e.Comment).HasMaxLength(150);
+
+                entity.Property(e => e.Keyword)
+                    .IsRequired()
+                    .HasMaxLength(20);
+
+                entity.Property(e => e.Value)
+                    .IsRequired()
+                    .HasColumnName("value")
+                    .HasMaxLength(50);
+            });
+
             modelBuilder.Entity<Role>(entity =>
             {
                 entity.Property(e => e.Id).ValueGeneratedOnAdd();
@@ -104,7 +120,6 @@ namespace LibraryManagement.Data
                 entity.HasOne(d => d.IdRoleNavigation)
                     .WithMany(p => p.User)
                     .HasForeignKey(d => d.IdRole)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_User_Role");
             });
 
