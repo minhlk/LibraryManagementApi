@@ -8,5 +8,6 @@ namespace LibraryManagement.Config
     public class AppSettings
     {
         public string Secret { get; set; }
+        public string SecretKey { get; set; }
     }
 }

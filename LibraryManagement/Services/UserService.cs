@@ -23,8 +23,8 @@ namespace LibraryManagement.Services
         public UserAuth Authenticate(string userName, string password)
         {
             //TODO : hash password here
-           //  call user repository to confirm this
-            var user = _userRepository.AuthenticateUser(userName, password);
+           //  call user repository to confirm user
+            var user = _userRepository.AuthenticateUser(userName, Password.EncryptString(_config.Value.SecretKey,password));
             if (user != null)
             {
                 var tokenHandler = new JwtSecurityTokenHandler();
@@ -58,20 +58,23 @@ namespace LibraryManagement.Services
 
         public async Task<User> Register(User user)
         {
-            //TODO : add logic check here and hash password
+            //TODO : add logic check here 
+            user.Password = Password.EncryptString(_config.Value.SecretKey, user.Password);
              return await _userRepository.CreateUserAsync(user);
         }
 
         public async Task<UserAuth> GetById(int userId)
         {
             var user = await _userRepository.GetUserByIdAsync(userId);
-            return new UserAuth()
+            if(user.IdRole != null)
+                return new UserAuth()
             {
                 UserName = user.UserName,
                 Name = user.Name,
                 Phone = user.Phone,
                 YearOfBirth = user.YearOfBirth
             };
+            return null;
         }
     }
 }

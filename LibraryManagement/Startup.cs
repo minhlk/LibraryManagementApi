@@ -75,7 +75,7 @@ namespace LibraryManagement
                             var userService = context.HttpContext.RequestServices.GetRequiredService<IUserService>();
                             var userId = int.Parse(context.Principal.Identity.Name);
                             var user = userService.GetById(userId);
-                            if (user == null)
+                            if (user.Result == null)
                             {
                                 // return unauthorized if user no longer exists
                                 context.Fail("Unauthorized");
