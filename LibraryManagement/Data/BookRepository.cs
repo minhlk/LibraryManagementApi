@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace LibraryManagement.Data
 {
-    public class BookRepository : RepositoryBase<Book>,IBookRepository
+    public class BookRepository : RepositoryBase<Book>, IBookRepository
     {
         public BookRepository(LibraryManagementContext repositoryContext) : base(repositoryContext)
         {
@@ -53,8 +53,9 @@ namespace LibraryManagement.Data
         }
 
     }
-    public static class Extension{
-        public static void Map(this Book oldBook,Book newBook)
+    public static class Extension
+    {
+        public static void Map(this Book oldBook, Book newBook)
         {
             //Check this later on
             oldBook.Name = newBook.Name;
@@ -63,5 +64,5 @@ namespace LibraryManagement.Data
             oldBook.BookGenre = newBook.BookGenre;
 
         }
-}
+    }
 }
