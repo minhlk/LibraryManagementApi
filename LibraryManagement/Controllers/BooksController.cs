@@ -54,7 +54,7 @@ namespace LibraryManagement.Controllers
 
         // PUT: api/Books/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutBook([FromRoute] int id, [FromBody] Book book)
+        public async Task<IActionResult> PutBook([FromRoute] long id, [FromBody] Book book)
         {
             if (!ModelState.IsValid)
             {
@@ -66,7 +66,7 @@ namespace LibraryManagement.Controllers
                 return BadRequest();
             }
 
-            await _bookRepository.UpdateBookAsync(id, book);
+            await _bookRepository.UpdateBookAsync(book);
 
            
             return NoContent();
@@ -88,7 +88,7 @@ namespace LibraryManagement.Controllers
 
         // DELETE: api/Books/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteBook([FromRoute] int id)
+        public async Task<IActionResult> DeleteBook([FromRoute] long id)
         {
             if (!ModelState.IsValid)
             {
