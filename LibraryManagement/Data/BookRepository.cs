@@ -22,7 +22,7 @@ namespace LibraryManagement.Data
             return books.OrderBy(x => x.Name);
 
         }
-        public async Task<Book> GetBookByIdAsync(int bookId)
+        public async Task<Book> GetBookByIdAsync(long bookId)
         {
             var book = await FindByConditionAsync(x => x.Id == bookId);
             var rs = book.FirstOrDefault();
@@ -37,15 +37,15 @@ namespace LibraryManagement.Data
             await SaveAsync();
         }
 
-        public async Task UpdateBookAsync(int bookId, Book newBook)
+        public async Task UpdateBookAsync( Book newBook)
         {
-            var book = await GetBookByIdAsync(bookId);
+            var book = await GetBookByIdAsync(newBook.Id);
             book.Map(newBook);
             Update(book);
             await SaveAsync();
         }
 
-        public async Task DeleteBookAsync(int bookId)
+        public async Task DeleteBookAsync(long bookId)
         {
             var book = await GetBookByIdAsync(bookId);
             Delete(book);

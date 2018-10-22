@@ -9,9 +9,9 @@ namespace LibraryManagement.Data.Interface
     public interface IGenreRepository
     {
         Task<IEnumerable<Genre>> GetAllGenresAsync();
-        Task<Genre> GetGenreByIdAsync(int genreId);
+        Task<Genre> GetGenreByIdAsync(long genreId);
         Task CreateGenreAsync(Genre genre);
         Task UpdateGenreAsync(Genre newGenre);
-        Task DeleteGenreAsync(int genreId);
+        Task DeleteGenreAsync(long genreId);
     }
 }
