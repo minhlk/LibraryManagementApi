@@ -12,7 +12,7 @@ namespace LibraryManagement.Data.Interface
         Task<Book> GetBookByIdAsync(int bookId);
 //        Task<BookExtended> GetBookWithDetailsAsync(Guid BookId);
         Task CreateBookAsync(Book book);
-        Task UpdateBookAsync(int bookId, Book newBook);
+        Task UpdateBookAsync(Book newBook);
         Task DeleteBookAsync(int bookId);
     }
 }

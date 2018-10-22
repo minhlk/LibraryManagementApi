@@ -11,7 +11,7 @@ namespace LibraryManagement.Data.Interface
         Task<IEnumerable<Genre>> GetAllGenresAsync();
         Task<Genre> GetGenreByIdAsync(int genreId);
         Task CreateGenreAsync(Genre genre);
-        Task UpdateGenreAsync(int genreId, Genre newGenre);
+        Task UpdateGenreAsync(Genre newGenre);
         Task DeleteGenreAsync(int genreId);
     }
 }
