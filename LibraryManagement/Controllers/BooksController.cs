@@ -33,7 +33,7 @@ namespace LibraryManagement.Controllers
         }
 
         // GET: api/Books/5
-//        [AllowAnonymous]
+        [AllowAnonymous]
         [HttpGet("{id}")]
         public async Task<IActionResult> GetBook([FromRoute] long id)
         {
@@ -54,6 +54,7 @@ namespace LibraryManagement.Controllers
 
         // PUT: api/Books/5
         [HttpPut("{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> PutBook([FromRoute] long id, [FromBody] Book book)
         {
             if (!ModelState.IsValid)
@@ -74,6 +75,7 @@ namespace LibraryManagement.Controllers
 
         // POST: api/Books
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> PostBook([FromBody] Book book)
         {
             if (!ModelState.IsValid)
@@ -88,6 +90,7 @@ namespace LibraryManagement.Controllers
 
         // DELETE: api/Books/5
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteBook([FromRoute] long id)
         {
             if (!ModelState.IsValid)

@@ -67,10 +67,13 @@ namespace LibraryManagement.Data
             await SaveAsync();
         }
 
-        public User AuthenticateUser(string userName, string password)
+        public async Task<User> AuthenticateUser(string userName, string password)
         {
-            var user = this.RepositoryContext.User.FirstOrDefault(u => u.Password == password && u.UserName == userName);
-            return user;
+            var user = await  FindByConditionAsync(u => u.Password == password && u.UserName == userName);
+            var rs = user.FirstOrDefault();
+            //Get Details about user role
+            rs.IdRoleNavigation= RepositoryContext.Role.FirstOrDefault(a => a.Id == rs.IdRole);
+            return rs;
         }
     }
 

@@ -33,7 +33,9 @@ namespace LibraryManagement.Services
                 {
                     Subject = new ClaimsIdentity(new Claim[]
                     {
-                        new Claim(ClaimTypes.Name,user.Id.ToString())
+                        new Claim(ClaimTypes.Name,user.Result.Id.ToString()),
+                        new Claim(ClaimTypes.Role, user.Result.IdRoleNavigation.RoleName), 
+                        
                     }),
                     Expires = DateTime.UtcNow.AddDays(7),
                     SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
@@ -44,10 +46,10 @@ namespace LibraryManagement.Services
                 return new UserAuth()
                 {
 
-                    UserName = user.UserName,
-                    Name = user.Name,
-                    Phone = user.Phone,
-                    YearOfBirth = user.YearOfBirth,
+                    UserName = user.Result.UserName,
+                    Name = user.Result.Name,
+                    Phone = user.Result.Phone,
+                    YearOfBirth = user.Result.YearOfBirth,
                     Token = tokenString
                 };
             }
