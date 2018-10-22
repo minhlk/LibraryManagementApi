@@ -4,6 +4,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using LibraryManagement.Data.Interface;
+using LibraryManagement.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace LibraryManagement.Data

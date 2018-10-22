@@ -19,6 +19,7 @@ using Newtonsoft.Json.Serialization;
 using Swashbuckle.AspNetCore.Swagger;
 using System.Text;
 using System.Threading.Tasks;
+using LibraryManagement.Models;
 
 namespace LibraryManagement
 {
