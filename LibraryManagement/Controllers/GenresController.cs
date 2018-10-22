@@ -31,7 +31,7 @@ namespace LibraryManagement.Controllers
         // GET: api/Genres/5
         [AllowAnonymous]
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetGenre([FromRoute] int id)
+        public async Task<IActionResult> GetGenre([FromRoute] long id)
         {
             if (!ModelState.IsValid)
             {
@@ -50,7 +50,7 @@ namespace LibraryManagement.Controllers
 
         // PUT: api/Genres/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutGenre([FromRoute] int id, [FromBody] Genre genre)
+        public async Task<IActionResult> PutGenre([FromRoute] long id, [FromBody] Genre genre)
         {
             if (!ModelState.IsValid)
             {
@@ -62,10 +62,10 @@ namespace LibraryManagement.Controllers
                 return BadRequest();
             }
 
-            await _genreRepository.UpdateGenreAsync(id, genre);
+            await _genreRepository.UpdateGenreAsync(genre);
 
            
-            return NoContent();
+            return Ok();
         }
 
         // POST: api/Genres
@@ -84,7 +84,7 @@ namespace LibraryManagement.Controllers
 
         // DELETE: api/Genres/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteGenre([FromRoute] int id)
+        public async Task<IActionResult> DeleteGenre([FromRoute] long id)
         {
             if (!ModelState.IsValid)
             {

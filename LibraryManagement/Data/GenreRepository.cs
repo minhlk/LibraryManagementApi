@@ -21,7 +21,7 @@ namespace LibraryManagement.Data
             return genres.OrderBy(x => x.Name);
 
         }
-        public async Task<Genre> GetGenreByIdAsync(int genreId)
+        public async Task<Genre> GetGenreByIdAsync(long genreId)
         {
             var genre = await FindByConditionAsync(x => x.Id == genreId);
             var rs = genre.FirstOrDefault();
@@ -36,15 +36,15 @@ namespace LibraryManagement.Data
             await SaveAsync();
         }
 
-        public async Task UpdateGenreAsync(int genreId, Genre newGenre)
+        public async Task UpdateGenreAsync(Genre newGenre)
         {
-            var genre = await GetGenreByIdAsync(genreId);
+            var genre = await GetGenreByIdAsync(newGenre.Id);
             genre.Name = newGenre.Name;
             Update(genre);
             await SaveAsync();
         }
 
-        public async Task DeleteGenreAsync(int genreId)
+        public async Task DeleteGenreAsync(long genreId)
         {
             var genre = await GetGenreByIdAsync(genreId);
             Delete(genre);

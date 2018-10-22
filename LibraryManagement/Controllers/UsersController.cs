@@ -25,6 +25,7 @@ namespace LibraryManagement.Controllers
         
 
         // GET: api/Users
+
         [HttpGet]
         public async Task<IEnumerable<User>> GetUser()
         {
@@ -33,7 +34,7 @@ namespace LibraryManagement.Controllers
 
         // GET: api/Users/5
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetUser([FromRoute] int id)
+        public async Task<IActionResult> GetUser([FromRoute] long id)
         {
             if (!ModelState.IsValid)
             {
@@ -52,7 +53,7 @@ namespace LibraryManagement.Controllers
 
         // PUT: api/Users/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutUser([FromRoute] int id, [FromBody] User user)
+        public async Task<IActionResult> PutUser([FromRoute] long id, [FromBody] User user)
         {
             if (!ModelState.IsValid)
             {
@@ -64,29 +65,29 @@ namespace LibraryManagement.Controllers
                 return BadRequest();
             }
 
-            await _userRepository.UpdateUserAsync(id, user);
+            await _userRepository.UpdateUserAsync(user);
 
            
-            return NoContent();
+            return Ok();
         }
 
         // POST: api/Users
-        [HttpPost]
-        public async Task<IActionResult> PostUser([FromBody] User user)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            await _userRepository.CreateUserAsync(user);
-
-            return CreatedAtAction("GetUser", new { id = user.Id }, user);
-        }
+//        [HttpPost]
+//        public async Task<IActionResult> PostUser([FromBody] User user)
+//        {
+//            if (!ModelState.IsValid)
+//            {
+//                return BadRequest(ModelState);
+//            }
+//
+//            await _userRepository.CreateUserAsync(user);
+//
+//            return CreatedAtAction("GetUser", new { id = user.Id }, user);
+//        }
 
         // DELETE: api/Users/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteUser([FromRoute] int id)
+        public async Task<IActionResult> DeleteUser([FromRoute] long id)
         {
             if (!ModelState.IsValid)
             {

@@ -22,7 +22,7 @@ namespace LibraryManagement.Data
             return users.OrderBy(x => x.Name);
 
         }
-        public async Task<User> GetUserByIdAsync(int userId)
+        public async Task<User> GetUserByIdAsync(long userId)
         {
             var user = await FindByConditionAsync(x => x.Id == userId);
             var rs = user.FirstOrDefault();
@@ -46,9 +46,9 @@ namespace LibraryManagement.Data
 
         }
 
-        public async Task UpdateUserAsync(int userId, User newUser)
+        public async Task UpdateUserAsync( User newUser)
         {
-            var user = await GetUserByIdAsync(userId);
+            var user = await GetUserByIdAsync(newUser.Id);
             //TODO : update user password
             user.Name = newUser.Name;
             user.UserName = newUser.UserName;
@@ -60,17 +60,20 @@ namespace LibraryManagement.Data
             await SaveAsync();
         }
 
-        public async Task DeleteUserAsync(int userId)
+        public async Task DeleteUserAsync(long userId)
         {
             var user = await GetUserByIdAsync(userId);
             Delete(user);
             await SaveAsync();
         }
 
-        public User AuthenticateUser(string userName, string password)
+        public async Task<User> AuthenticateUser(string userName, string password)
         {
-            var user = this.RepositoryContext.User.FirstOrDefault(u => u.Password == password && u.UserName == userName);
-            return user;
+            var user = await  FindByConditionAsync(u => u.Password == password && u.UserName == userName);
+            var rs = user.FirstOrDefault();
+            //Get Details about user role
+            rs.IdRoleNavigation= RepositoryContext.Role.FirstOrDefault(a => a.Id == rs.IdRole);
+            return rs;
         }
     }
 
