@@ -27,6 +27,7 @@ namespace LibraryManagement.Controllers
         // GET: api/Users
 
         [HttpGet]
+        [Authorize(Roles = "Admin,Librarian")]
         public async Task<IEnumerable<User>> GetUser()
         {
             return await _userRepository.GetAllUsersAsync();
@@ -34,6 +35,7 @@ namespace LibraryManagement.Controllers
 
         // GET: api/Users/5
         [HttpGet("{id}")]
+        [Authorize(Roles = "Admin,Librarian")]
         public async Task<IActionResult> GetUser([FromRoute] long id)
         {
             if (!ModelState.IsValid)
@@ -53,6 +55,7 @@ namespace LibraryManagement.Controllers
 
         // PUT: api/Users/5
         [HttpPut("{id}")]
+        [Authorize(Roles = "Admin,Librarian")]
         public async Task<IActionResult> PutUser([FromRoute] long id, [FromBody] User user)
         {
             if (!ModelState.IsValid)
@@ -87,6 +90,7 @@ namespace LibraryManagement.Controllers
 
         // DELETE: api/Users/5
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin,Librarian")]
         public async Task<IActionResult> DeleteUser([FromRoute] long id)
         {
             if (!ModelState.IsValid)

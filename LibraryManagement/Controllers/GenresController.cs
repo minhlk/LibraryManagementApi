@@ -50,6 +50,7 @@ namespace LibraryManagement.Controllers
 
         // PUT: api/Genres/5
         [HttpPut("{id}")]
+        [Authorize(Roles = "Admin,Librarian")]
         public async Task<IActionResult> PutGenre([FromRoute] long id, [FromBody] Genre genre)
         {
             if (!ModelState.IsValid)
@@ -70,6 +71,7 @@ namespace LibraryManagement.Controllers
 
         // POST: api/Genres
         [HttpPost]
+        [Authorize(Roles = "Admin,Librarian")]
         public async Task<IActionResult> PostGenre([FromBody] Genre genre)
         {
             if (!ModelState.IsValid)
@@ -84,6 +86,7 @@ namespace LibraryManagement.Controllers
 
         // DELETE: api/Genres/5
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin,Librarian")]
         public async Task<IActionResult> DeleteGenre([FromRoute] long id)
         {
             if (!ModelState.IsValid)
