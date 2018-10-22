@@ -30,7 +30,6 @@ namespace LibraryManagement.Data
         public async Task UpdateAuthorAsync(int aithorId, Author newAuthor)
         {
             var author = await GetAuthorByIdAsync(aithorId);
-            author = newAuthor;
             author.Name = newAuthor.Name;
             author.YearOfBirth = newAuthor.YearOfBirth;
             Update(author);
