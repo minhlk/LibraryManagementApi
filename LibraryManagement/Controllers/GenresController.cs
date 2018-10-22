@@ -31,7 +31,7 @@ namespace LibraryManagement.Controllers
         // GET: api/Genres/5
         [AllowAnonymous]
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetGenre([FromRoute] int id)
+        public async Task<IActionResult> GetGenre([FromRoute] long id)
         {
             if (!ModelState.IsValid)
             {
@@ -65,7 +65,7 @@ namespace LibraryManagement.Controllers
             await _genreRepository.UpdateGenreAsync(genre);
 
            
-            return NoContent();
+            return Ok();
         }
 
         // POST: api/Genres

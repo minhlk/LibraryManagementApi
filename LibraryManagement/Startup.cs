@@ -1,4 +1,6 @@
-﻿using LibraryManagement.Config;
+﻿using System.Collections.Generic;
+using System.Linq;
+using LibraryManagement.Config;
 using LibraryManagement.Data;
 using LibraryManagement.Data.Interface;
 using LibraryManagement.Services;
@@ -36,6 +38,10 @@ namespace LibraryManagement
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new Info { Title = "MK API", Version = "v1" });
+                c.AddSecurityDefinition("Bearer", new ApiKeyScheme { In = "header", Description = "Please enter JWT with Bearer into field", Name = "Authorization", Type = "apiKey" });
+                c.AddSecurityRequirement(new Dictionary<string, IEnumerable<string>> {
+                    { "Bearer", Enumerable.Empty<string>() },
+                });
             });
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
             services.AddMvc().AddJsonOptions(options => {

@@ -35,7 +35,7 @@ namespace LibraryManagement.Controllers
         // GET: api/Books/5
 //        [AllowAnonymous]
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetBook([FromRoute] int id)
+        public async Task<IActionResult> GetBook([FromRoute] long id)
         {
             if (!ModelState.IsValid)
             {
@@ -69,7 +69,7 @@ namespace LibraryManagement.Controllers
             await _bookRepository.UpdateBookAsync(book);
 
            
-            return NoContent();
+            return Ok();
         }
 
         // POST: api/Books

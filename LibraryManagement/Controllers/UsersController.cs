@@ -25,6 +25,7 @@ namespace LibraryManagement.Controllers
         
 
         // GET: api/Users
+
         [HttpGet]
         public async Task<IEnumerable<User>> GetUser()
         {
@@ -67,22 +68,22 @@ namespace LibraryManagement.Controllers
             await _userRepository.UpdateUserAsync(user);
 
            
-            return NoContent();
+            return Ok();
         }
 
         // POST: api/Users
-        [HttpPost]
-        public async Task<IActionResult> PostUser([FromBody] User user)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            await _userRepository.CreateUserAsync(user);
-
-            return CreatedAtAction("GetUser", new { id = user.Id }, user);
-        }
+//        [HttpPost]
+//        public async Task<IActionResult> PostUser([FromBody] User user)
+//        {
+//            if (!ModelState.IsValid)
+//            {
+//                return BadRequest(ModelState);
+//            }
+//
+//            await _userRepository.CreateUserAsync(user);
+//
+//            return CreatedAtAction("GetUser", new { id = user.Id }, user);
+//        }
 
         // DELETE: api/Users/5
         [HttpDelete("{id}")]
