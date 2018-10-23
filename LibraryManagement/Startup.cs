@@ -55,6 +55,8 @@ namespace LibraryManagement
             services.AddScoped<IBookRepository, BookRepository>();
             services.AddScoped<IGenreRepository, GenreRepository>();
             services.AddScoped<IAuthorRepository, AuthorRepository>();
+            services.AddScoped<IBookGenreRepository, BookGenreRepository>();
+            services.AddScoped<IRoleRepository, RoleRepository>();
 
 
 
