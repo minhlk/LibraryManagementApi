@@ -12,100 +12,102 @@ namespace LibraryManagement.Controllers
     [Authorize]
     [Route("api/[controller]")]
     [ApiController]
-    public class AuthorsController : ControllerBase
+    public class UserBooksController : ControllerBase
     {
-        private readonly IAuthorRepository _authorRepository;
+        private readonly IUserBookRepository _userBookRepository;
 
-        public AuthorsController(IAuthorRepository authorRepository)
+        public UserBooksController(IUserBookRepository userBookRepository)
         {
-            _authorRepository = authorRepository;
+            _userBookRepository = userBookRepository;
         }
 
 
-        // GET: api/Authors
+        // GET: api/UserBooks
         [AllowAnonymous]
         [HttpGet]
-        public async Task<IEnumerable<Author>> GetAuthor()
+        public async Task<IEnumerable<UserBook>> GetUserBook()
         {
-            return await _authorRepository.GetAllAuthorsAsync();
+            return await _userBookRepository.GetAllUserBooksAsync();
         }
 
-        // GET: api/Authors/5
-        //        [AllowAnonymous]
+        // GET: api/UserBooks/5
         [AllowAnonymous]
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetAuthor([FromRoute] int id)
+        public async Task<IActionResult> GetUserBook([FromRoute] int id)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var author = await _authorRepository.GetAuthorByIdAsync(id);
+            var userBook = await _userBookRepository.GetUserBookByIdAsync(id);
 
-            if (author == null)
+            if (userBook == null)
             {
                 return NotFound();
             }
 
-            return Ok(author);
+            return Ok(userBook);
         }
 
-        // PUT: api/Authors/5
+        // PUT: api/UserBooks/5
         [Authorize(Roles = "Admin,Librarian")]
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutAuthor([FromRoute] int id, [FromBody] Author author)
+        public async Task<IActionResult> PutUserBook([FromRoute] int id, [FromBody] UserBook userBook)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            if (id != author.Id)
+            if (id != userBook.Id)
             {
                 return BadRequest();
             }
 
-            await _authorRepository.UpdateAuthorAsync(id, author);
+            await _userBookRepository.UpdateUserBookAsync(id, userBook);
 
 
             return NoContent();
         }
 
-        // POST: api/Authors
+        // POST: api/UserBooks
         [Authorize(Roles = "Admin,Librarian")]
         [HttpPost]
-        public async Task<IActionResult> PostAuthor([FromBody] Author author)
+        public async Task<IActionResult> PostUserBook([FromBody] UserBook userBook)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            await _authorRepository.CreateAuthorAsync(author);
+            await _userBookRepository.CreateUserBookAsync(userBook);
 
-            return CreatedAtAction("GetAuthor", new { id = author.Id }, author);
+            return CreatedAtAction("GetUserBook", new { id = userBook.Id }, userBook);
         }
 
-        // DELETE: api/Authors/5
+        // DELETE: api/UserBooks/5
         [Authorize(Roles = "Admin,Librarian")]
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteAuthor([FromRoute] int id)
+        public async Task<IActionResult> DeleteUserBook([FromRoute] int id)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var author = await _authorRepository.GetAuthorByIdAsync(id);
-            if (author == null)
+            var userBook = await _userBookRepository.GetUserBookByIdAsync(id);
+            if (userBook == null)
             {
                 return NotFound();
             }
 
-            await _authorRepository.DeleteAuthorAsync(id);
+            await _userBookRepository.DeleteUserBookAsync(id);
 
-            return Ok(author);
+            return Ok(userBook);
         }
+
+
+
     }
 }
