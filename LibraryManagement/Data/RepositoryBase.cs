@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using LibraryManagement.Data.Interface;
 using LibraryManagement.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query;
 
 namespace LibraryManagement.Data
 {
@@ -13,7 +14,7 @@ namespace LibraryManagement.Data
     {
         protected LibraryManagementContext RepositoryContext { get; set; }
 
-        public RepositoryBase(LibraryManagementContext repositoryContext)
+        protected RepositoryBase(LibraryManagementContext repositoryContext)
         {
             this.RepositoryContext = repositoryContext;
         }
@@ -22,7 +23,20 @@ namespace LibraryManagement.Data
         {
             return await this.RepositoryContext.Set<T>().ToListAsync();
         }
-
+        public async Task<int> CountAllAsync()
+        {
+            return await this.RepositoryContext.Set<T>().CountAsync();
+        }
+        public async Task<IEnumerable<T>> FindAllByPageAsync(int page, int numPerPage,params Expression<Func<T,object>>[] expressions)
+        {
+            IQueryable<T> query = null;
+            query = this.RepositoryContext.Set<T>();
+            foreach (var expression in expressions)
+            {
+                query = query.Include(expression);
+            }
+            return await query.Skip(page * numPerPage).Take(numPerPage).ToListAsync();   
+        }
         public async Task<IEnumerable<T>> FindByConditionAsync(Expression<Func<T, bool>> expression)
         {
             return await this.RepositoryContext.Set<T>().Where(expression).ToListAsync();

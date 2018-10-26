@@ -13,5 +13,7 @@ namespace LibraryManagement.Data.Interface
         void Update(T entity);
         void Delete(T entity);
         Task SaveAsync();
+        Task<IEnumerable<T>> FindAllByPageAsync(int page, int numPerPage, params Expression<Func<T, object>>[] expressions);
+        Task<int> CountAllAsync();
     }
 }

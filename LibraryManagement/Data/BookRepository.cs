@@ -22,6 +22,15 @@ namespace LibraryManagement.Data
             return books.OrderBy(x => x.Name);
 
         }
+        public async Task<int> CountAllBooksAsync()
+        {
+            return await CountAllAsync();
+        }
+        public async Task<IEnumerable<Book>> GetBooksByPageAsync(int page, int numPerPage)
+        {
+            return await FindAllByPageAsync(page, numPerPage, book => book.IdAuthorNavigation ,book => book.BookGenre);
+        }
+
         public async Task<Book> GetBookByIdAsync(long bookId)
         {
             var book = await FindByConditionAsync(x => x.Id == bookId);

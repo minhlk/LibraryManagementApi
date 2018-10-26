@@ -4,6 +4,7 @@ using LibraryManagement.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using LibraryManagement.Config;
 using LibraryManagement.Services;
 using Microsoft.AspNetCore.Authorization;
 
@@ -22,16 +23,21 @@ namespace LibraryManagement.Controllers
             _bookRepository = bookRepository;
             _userService = userService;
         }
-        
 
+
+        [AllowAnonymous]
+        [HttpGet("size")]
+        public async Task<int> GetSize()
+        {
+            return await _bookRepository.CountAllBooksAsync();/// GlobalVariables.PageSize;
+        }
         // GET: api/Books
         [AllowAnonymous]
         [HttpGet]
-        public async Task<IEnumerable<Book>> GetBook()
+        public async Task<IEnumerable<Book>> GetBook([FromQuery(Name = "page")] int page)
         {
-            return await _bookRepository.GetAllBooksAsync();
+            return await _bookRepository.GetBooksByPageAsync(page,GlobalVariables.PageSize);
         }
-
         // GET: api/Books/5
         [AllowAnonymous]
         [HttpGet("{id}")]
