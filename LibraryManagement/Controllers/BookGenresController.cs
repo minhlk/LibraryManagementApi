@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace LibraryManagement.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class BookGenresController : ControllerBase
@@ -30,7 +31,7 @@ namespace LibraryManagement.Controllers
         }
 
         // GET: api/BookGenres/5
-        //        [AllowAnonymous]
+        [AllowAnonymous]
         [HttpGet("{id}")]
         public async Task<IActionResult> GetBookGenre([FromRoute] int id)
         {
@@ -50,6 +51,7 @@ namespace LibraryManagement.Controllers
         }
 
         // PUT: api/BookGenres/5
+        [Authorize(Roles = "Admin")]
         [HttpPut("{id}")]
         public async Task<IActionResult> PutBookGenre([FromRoute] int id, [FromBody] BookGenre bookGenre)
         {
@@ -70,6 +72,7 @@ namespace LibraryManagement.Controllers
         }
 
         // POST: api/BookGenres
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<IActionResult> PostBookGenre([FromBody] BookGenre bookGenre)
         {
@@ -84,6 +87,7 @@ namespace LibraryManagement.Controllers
         }
 
         // DELETE: api/BookGenres/5
+        [Authorize(Roles = "Admin")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteBookGenre([FromRoute] int id)
         {

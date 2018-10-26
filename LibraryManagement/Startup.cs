@@ -37,7 +37,7 @@ namespace LibraryManagement
             // Register the Swagger generator, defining one or more Swagger documents  
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new Info { Title = "MK API", Version = "v1" });
+                c.SwaggerDoc("v1", new Info { Title = "Library API", Version = "v1" });
                 c.AddSecurityDefinition("Bearer", new ApiKeyScheme { In = "header", Description = "Please enter JWT with Bearer into field", Name = "Authorization", Type = "apiKey" });
                 c.AddSecurityRequirement(new Dictionary<string, IEnumerable<string>> {
                     { "Bearer", Enumerable.Empty<string>() },
@@ -57,6 +57,7 @@ namespace LibraryManagement
             services.AddScoped<IAuthorRepository, AuthorRepository>();
             services.AddScoped<IBookGenreRepository, BookGenreRepository>();
             services.AddScoped<IRoleRepository, RoleRepository>();
+            services.AddScoped<IUserBookRepository, UserBookRepository>();
 
 
 
@@ -128,7 +129,7 @@ namespace LibraryManagement
             // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.), specifying the Swagger JSON endpoint.  
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "MK API V1");
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Library API V1");
             });
             app.UseHttpsRedirection();
             app.UseMvc();
