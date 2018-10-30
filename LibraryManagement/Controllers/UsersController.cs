@@ -126,8 +126,8 @@ namespace LibraryManagement.Controllers
         {
             var user = await _userService.Register(userInfo);
             if(user == null)
-                return BadRequest(new { message = "Your username already existed" });
-            return Ok();
+                return BadRequest(new { message = "Your username already existed" ,status = 400});
+            return Ok(new { message = "Account is created", status = 200 });
         }
 
     }

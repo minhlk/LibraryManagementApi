@@ -15,6 +15,7 @@ namespace LibraryManagement.Services
     {
         private readonly IUserRepository _userRepository;
         private readonly IOptions<AppSettings> _config;
+        private readonly byte DefaultRole = 3;
         public UserService(IUserRepository userRepository,IOptions<AppSettings> config)
         {
             this._userRepository = userRepository;
@@ -62,7 +63,8 @@ namespace LibraryManagement.Services
         {
             //TODO : add logic check here 
             user.Password = Password.EncryptString(_config.Value.SecretKey, user.Password);
-             return await _userRepository.CreateUserAsync(user);
+            user.IdRole = DefaultRole;
+            return await _userRepository.CreateUserAsync(user);
         }
 
         public async Task<UserAuth> GetById(int userId)
