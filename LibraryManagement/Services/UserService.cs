@@ -26,7 +26,7 @@ namespace LibraryManagement.Services
             //TODO : hash password here
            //  call user repository to confirm user
             var user = _userRepository.AuthenticateUser(userName, Password.EncryptString(_config.Value.SecretKey,password));
-            if (user != null)
+            if (user.Result != null)
             {
                 var tokenHandler = new JwtSecurityTokenHandler();
                 var key = Encoding.ASCII.GetBytes(_config.Value.Secret);

@@ -115,10 +115,10 @@ namespace LibraryManagement.Controllers
             var user = _userService.Authenticate(userInfo.UserName, userInfo.Password);
 
             if (user == null)
-                return BadRequest(new { message = "Username or password is incorrect" });
+                return BadRequest(new { message = "Username or password is incorrect", status = 400 });
 
            
-            return Ok(user);
+            return Ok(new {message = "Login success" ,status = 200 , result = user});
         }
         [AllowAnonymous]
         [HttpPost("register")]
