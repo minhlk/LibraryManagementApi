@@ -23,14 +23,14 @@ namespace LibraryManagement.Models
         public virtual DbSet<User> User { get; set; }
         public virtual DbSet<UserBook> UserBook { get; set; }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            if (!optionsBuilder.IsConfigured)
-            {
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseSqlServer("Server=.\\MKServer;Database=LibraryManagement;Trusted_Connection=True;");
-            }
-        }
+//        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+//        {
+//            if (!optionsBuilder.IsConfigured)
+//            {
+//#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
+//                optionsBuilder.UseSqlServer("Server=.\\MKServer;Database=LibraryManagement;Trusted_Connection=True;");
+//            }
+//        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -47,6 +47,12 @@ namespace LibraryManagement.Models
 
             modelBuilder.Entity<Book>(entity =>
             {
+                entity.Property(e => e.CreateTime)
+                    .HasColumnType("datetime")
+                    .HasDefaultValueSql("(getdate())");
+
+                entity.Property(e => e.Image).HasDefaultValueSql("('http://fakeimg.pl/365x365/')");
+
                 entity.Property(e => e.Name)
                     .IsRequired()
                     .HasMaxLength(35);
@@ -98,11 +104,11 @@ namespace LibraryManagement.Models
 
                 entity.Property(e => e.Phone)
                     .IsRequired()
-                    .HasMaxLength(15);
+                    .HasMaxLength(50);
 
                 entity.Property(e => e.UserName)
                     .IsRequired()
-                    .HasMaxLength(20);
+                    .HasMaxLength(50);
 
                 entity.Property(e => e.YearOfBirth)
                     .IsRequired()
@@ -119,11 +125,11 @@ namespace LibraryManagement.Models
             {
                 entity.Property(e => e.EndDate)
                     .IsRequired()
-                    .HasMaxLength(8);
+                    .HasMaxLength(50);
 
                 entity.Property(e => e.StartDate)
                     .IsRequired()
-                    .HasMaxLength(8);
+                    .HasMaxLength(50);
 
                 entity.HasOne(d => d.IdBookNavigation)
                     .WithMany(p => p.UserBook)
