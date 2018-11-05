@@ -70,13 +70,13 @@ namespace LibraryManagement.Controllers
 
             if (id != book.Id)
             {
-                return BadRequest();
+                return BadRequest(new { message = "Can't update this book", status = 400 });
             }
 
             await _bookRepository.UpdateBookAsync(book);
 
-           
-            return Ok();
+
+            return Ok(new { message = "Save Success", status = 200, result = "" });
         }
 
         // POST: api/Books
@@ -107,12 +107,12 @@ namespace LibraryManagement.Controllers
             var book = await _bookRepository.GetBookByIdAsync(id);
             if (book == null)
             {
-                return NotFound();
+                return BadRequest(new { message = "Can't delete this book", status = 400 });
             }
 
             await _bookRepository.DeleteBookAsync(id);
-            
-            return Ok(book);
+
+            return Ok(new { message = "Delete Success", status = 200, result = book });
         }
       
 

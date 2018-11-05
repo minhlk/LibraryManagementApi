@@ -62,12 +62,12 @@ namespace LibraryManagement.Controllers
 
             if (id != bookGenre.Id)
             {
-                return BadRequest();
+                return NotFound(new { message = "Can't update this book genre", status = 400 });
             }
 
             await _bookGenreRepository.UpdateBookGenreAsync(id, bookGenre);
 
-
+//            return Ok(new { message = "Save Success", status = 200, result = "" });
             return NoContent();
         }
 
@@ -99,12 +99,12 @@ namespace LibraryManagement.Controllers
             var bookGenre = await _bookGenreRepository.GetBookGenreByIdAsync(id);
             if (bookGenre == null)
             {
-                return NotFound();
+                return NotFound(new { message = "Not found this genre book", status = 400 });
             }
 
             await _bookGenreRepository.DeleteBookGenreAsync(id);
 
-            return Ok(bookGenre);
+            return Ok(new { message = "Delete Success", status = 200, result = bookGenre });
         }
 
 

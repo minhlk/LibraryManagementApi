@@ -42,7 +42,7 @@ namespace LibraryManagement.Controllers
 
             if (genre == null)
             {
-                return NotFound();
+                return NotFound(new { message = "Not found this genre", status = 400 });
             }
 
             return Ok(genre);
@@ -60,13 +60,13 @@ namespace LibraryManagement.Controllers
 
             if (id != genre.Id)
             {
-                return BadRequest();
+                return BadRequest(new { message = "Can't update this genre", status = 400 });
             }
 
             await _genreRepository.UpdateGenreAsync(genre);
 
-           
-            return Ok();
+
+            return Ok(new { message = "Save Success", status = 200, result = "" });
         }
 
         // POST: api/Genres
@@ -97,12 +97,12 @@ namespace LibraryManagement.Controllers
             var genre = await _genreRepository.GetGenreByIdAsync(id);
             if (genre == null)
             {
-                return NotFound();
+                return BadRequest(new { message = "Can't delete this genre", status = 400 });
             }
 
             await _genreRepository.DeleteGenreAsync(id);
-            
-            return Ok(genre);
+
+            return Ok(new { message = "Delete Success", status = 200, result = genre });
         }
         
     }
