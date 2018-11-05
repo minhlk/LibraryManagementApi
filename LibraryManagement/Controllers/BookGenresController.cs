@@ -44,10 +44,10 @@ namespace LibraryManagement.Controllers
 
             if (bookGenre == null)
             {
-                return NotFound();
+                return NotFound(new { message = "Can't find this book genre", status = 400 });
             }
 
-            return Ok(bookGenre);
+            return Ok(new { message = "Success", status = 200, result = bookGenre });
         }
 
         // PUT: api/BookGenres/5
@@ -83,7 +83,7 @@ namespace LibraryManagement.Controllers
 
             await _bookGenreRepository.CreateBookGenreAsync(bookGenre);
 
-            return CreatedAtAction("GetBookGenre", new { id = bookGenre.Id }, bookGenre);
+            return RedirectToAction("GetBookGenre", new { id = bookGenre.Id });
         }
 
         // DELETE: api/BookGenres/5

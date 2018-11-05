@@ -52,10 +52,10 @@ namespace LibraryManagement.Controllers
 
             if (book == null)
             {
-                return NotFound();
+                return NotFound(new { message = "Can't find this book", status = 400 });
             }
 
-            return Ok(book);
+            return Ok(new { message = "Success", status = 200, result = book });
         }
 
         // PUT: api/Books/5
@@ -70,7 +70,7 @@ namespace LibraryManagement.Controllers
 
             if (id != book.Id)
             {
-                return BadRequest(new { message = "Can't update this book", status = 400 });
+                return NotFound(new { message = "Can't update this book", status = 400 });
             }
 
             await _bookRepository.UpdateBookAsync(book);
@@ -91,7 +91,7 @@ namespace LibraryManagement.Controllers
 
             await _bookRepository.CreateBookAsync(book);
 
-            return CreatedAtAction("GetBook", new { id = book.Id }, book);
+            return RedirectToAction("GetBook", new { id = book.Id });
         }
 
         // DELETE: api/Books/5

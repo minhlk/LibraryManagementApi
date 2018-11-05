@@ -27,6 +27,7 @@ namespace LibraryManagement.Data
             var user = await FindByConditionAsync(x => x.Id == userId);
             var rs = user.FirstOrDefault();
             //Get Details about books
+            if(rs !=null)
             rs.UserBook = await RepositoryContext.UserBook.Where(b => b.IdUser == userId).ToListAsync();
             return rs;
         }

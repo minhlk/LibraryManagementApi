@@ -36,6 +36,7 @@ namespace LibraryManagement.Data
             var book = await FindByConditionAsync(x => x.Id == bookId);
             var rs = book.FirstOrDefault();
             //Get Details about genres
+            if(rs != null)
             rs.BookGenre = await RepositoryContext.BookGenre.Where(b => b.IdBook == bookId).ToListAsync();
             return rs;
         }
@@ -71,6 +72,7 @@ namespace LibraryManagement.Data
             oldBook.Amount = newBook.Amount;
             oldBook.IdAuthor = newBook.IdAuthor;
             oldBook.BookGenre = newBook.BookGenre;
+            oldBook.Image = newBook.Image;
 
         }
     }

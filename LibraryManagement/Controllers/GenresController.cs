@@ -45,7 +45,7 @@ namespace LibraryManagement.Controllers
                 return NotFound(new { message = "Not found this genre", status = 400 });
             }
 
-            return Ok(genre);
+            return Ok(new { message = "Success", status = 200, result = genre });
         }
 
         // PUT: api/Genres/5
@@ -60,7 +60,7 @@ namespace LibraryManagement.Controllers
 
             if (id != genre.Id)
             {
-                return BadRequest(new { message = "Can't update this genre", status = 400 });
+                return NotFound(new { message = "Can't update this genre", status = 400 });
             }
 
             await _genreRepository.UpdateGenreAsync(genre);
@@ -81,7 +81,7 @@ namespace LibraryManagement.Controllers
 
             await _genreRepository.CreateGenreAsync(genre);
 
-            return CreatedAtAction("GetGenre", new { id = genre.Id }, genre);
+            return RedirectToAction("GetGenre", new { id = genre.Id });
         }
 
         // DELETE: api/Genres/5
