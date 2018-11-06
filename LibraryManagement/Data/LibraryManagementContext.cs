@@ -1,8 +1,7 @@
-﻿using System;
+﻿using LibraryManagement.Models;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
 
-namespace LibraryManagement.Models
+namespace LibraryManagement.Data
 {
     public partial class LibraryManagementContext : DbContext
     {
@@ -50,6 +49,8 @@ namespace LibraryManagement.Models
                 entity.Property(e => e.CreateTime)
                     .HasColumnType("datetime")
                     .HasDefaultValueSql("(getdate())");
+
+                entity.Property(e => e.Description).HasDefaultValueSql("('Description here')");
 
                 entity.Property(e => e.Image).HasDefaultValueSql("('http://fakeimg.pl/365x365/')");
 

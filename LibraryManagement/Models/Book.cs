@@ -17,6 +17,7 @@ namespace LibraryManagement.Models
         public int Amount { get; set; }
         public DateTime CreateTime { get; set; }
         public string Image { get; set; }
+        public string Description { get; set; }
 
         public Author IdAuthorNavigation { get; set; }
         public ICollection<BookGenre> BookGenre { get; set; }

@@ -27,16 +27,16 @@ namespace LibraryManagement.Controllers
 
         [AllowAnonymous]
         [HttpGet("size")]
-        public async Task<int> GetSize()
+        public async Task<int> GetSize([FromQuery(Name = "searchKeyWords")] string searchKeyWords)
         {
-            return await _bookRepository.CountAllBooksAsync();/// GlobalVariables.PageSize;
+            return await _bookRepository.CountAllBooksAsync(searchKeyWords??"");/// GlobalVariables.PageSize;
         }
         // GET: api/Books
         [AllowAnonymous]
         [HttpGet]
-        public async Task<IEnumerable<Book>> GetBook([FromQuery(Name = "page")] int page)
+        public async Task<IEnumerable<Book>> GetBook([FromQuery(Name = "page")] int page, [FromQuery(Name = "searchKeyWords")] string searchKeyWords)
         {
-            return await _bookRepository.GetBooksByPageAsync(page,GlobalVariables.PageSize);
+            return await _bookRepository.GetBooksAsync(page,GlobalVariables.PageSize,searchKeyWords??"");
         }
         // GET: api/Books/5
         [AllowAnonymous]

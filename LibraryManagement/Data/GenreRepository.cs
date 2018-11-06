@@ -26,6 +26,7 @@ namespace LibraryManagement.Data
             var genre = await FindByConditionAsync(x => x.Id == genreId);
             var rs = genre.FirstOrDefault();
             //Get Details about genres
+            if(rs != null)
             rs.BookGenre = await RepositoryContext.BookGenre.Where(b => b.IdGenre == genreId).ToListAsync();
             return rs;
         }
@@ -51,6 +52,21 @@ namespace LibraryManagement.Data
             await SaveAsync();
         }
 
+        public async Task<IEnumerable<Genre>> GetGenresAsync(int page, int numPerPage, string searchKeyWords = "")
+        {
+            return await this.FindByCondition(genre => searchKeyWords.Trim().Length == 0 || genre.Name.ToLower().Contains(searchKeyWords.Trim().ToLower()))
+//                .Include(b => b.IdAuthorNavigation)
+//                .Include(b => b.BookGenre)
+//                .ThenInclude(b => b.IdGenreNavigation)
+                .Skip(page * numPerPage)
+                .Take(numPerPage)
+                .ToListAsync();
+        }
+
+        public async Task<int> CountAllGenresAsync(string searchKeyWords = "")
+        {
+            return await CountAll(genre => searchKeyWords.Trim().Length == 0 || genre.Name.ToLower().Contains(searchKeyWords.Trim().ToLower())).CountAsync();
+        }
     }
    
 

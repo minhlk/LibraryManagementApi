@@ -3,6 +3,7 @@ using LibraryManagement.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using LibraryManagement.Config;
 using Microsoft.AspNetCore.Authorization;
 
 namespace LibraryManagement.Controllers
@@ -18,16 +19,27 @@ namespace LibraryManagement.Controllers
         {
             _genreRepository = genreRepository;
         }
-        
 
-        // GET: api/Genres
         [AllowAnonymous]
-        [HttpGet]
-        public async Task<IEnumerable<Genre>> GetGenre()
+        [HttpGet("size")]
+        public async Task<int> GetSize([FromQuery(Name = "searchKeyWords")] string searchKeyWords)
+        {
+            return await _genreRepository.CountAllGenresAsync(searchKeyWords ?? "");
+        }
+        [AllowAnonymous]
+        [HttpGet("all")]
+        public async Task<IEnumerable<Genre>> GetAllGenre()
         {
             return await _genreRepository.GetAllGenresAsync();
         }
 
+        // GET: api/Genres
+        [AllowAnonymous]
+        [HttpGet]
+        public async Task<IEnumerable<Genre>> GetGenre([FromQuery(Name = "page")] int page, [FromQuery(Name = "searchKeyWords")] string searchKeyWords)
+        {
+            return await _genreRepository.GetGenresAsync(page, GlobalVariables.PageSize, searchKeyWords ?? "");
+        }
         // GET: api/Genres/5
         [AllowAnonymous]
         [HttpGet("{id}")]

@@ -22,13 +22,19 @@ namespace LibraryManagement.Data
             return books.OrderBy(x => x.Name);
 
         }
-        public async Task<int> CountAllBooksAsync()
+        public async Task<int> CountAllBooksAsync(string searchKeyWords = "")
         {
-            return await CountAllAsync();
+            return await CountAll(book => searchKeyWords.Trim().Length == 0 || book.Name.ToLower().Contains(searchKeyWords.Trim().ToLower())).CountAsync();
         }
-        public async Task<IEnumerable<Book>> GetBooksByPageAsync(int page, int numPerPage)
+        public async Task<IEnumerable<Book>> GetBooksAsync(int page, int numPerPage,string searchKeyWords = "")
         {
-            return await FindAllByPageAsync(page, numPerPage, book => book.IdAuthorNavigation ,book => book.BookGenre);
+            return await this.FindByCondition(book => searchKeyWords.Trim().Length == 0 || book.Name.ToLower().Contains(searchKeyWords.Trim().ToLower()))
+                .Include(b => b.IdAuthorNavigation)
+                .Include(b=> b.BookGenre)
+                .ThenInclude(b => b.IdGenreNavigation)
+                .Skip(page * numPerPage)
+                .Take(numPerPage)
+                .ToListAsync();
         }
 
         public async Task<Book> GetBookByIdAsync(long bookId)

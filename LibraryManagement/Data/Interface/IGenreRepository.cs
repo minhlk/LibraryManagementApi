@@ -13,5 +13,7 @@ namespace LibraryManagement.Data.Interface
         Task CreateGenreAsync(Genre genre);
         Task UpdateGenreAsync(Genre newGenre);
         Task DeleteGenreAsync(long genreId);
+        Task<IEnumerable<Genre>> GetGenresAsync(int page, int numPerPage, string searchKeyWords = "");
+        Task<int> CountAllGenresAsync(string searchKeyWords = "");
     }
 }
