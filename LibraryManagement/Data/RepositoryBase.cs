@@ -27,19 +27,28 @@ namespace LibraryManagement.Data
         {
             return await this.RepositoryContext.Set<T>().CountAsync();
         }
-        public async Task<IEnumerable<T>> FindAllByPageAsync(int page, int numPerPage,params Expression<Func<T,object>>[] expressions)
+        public IQueryable<T> CountAll(Expression<Func<T, bool>> expression)
         {
-            IQueryable<T> query = null;
-            query = this.RepositoryContext.Set<T>();
-            foreach (var expression in expressions)
-            {
-                query = query.Include(expression);
-            }
-            return await query.Skip(page * numPerPage).Take(numPerPage).ToListAsync();   
+            return  this.RepositoryContext.Set<T>().Where(expression).AsQueryable();
         }
+        //        public async Task<IEnumerable<T>> FindAllByPageAsync(int page, int numPerPage,params Expression<Func<T,object>>[] expressions)
+        //        {
+        //            IQueryable<T> query = null;
+        //            query = this.RepositoryContext.Set<T>();
+        //            foreach (var expression in expressions)
+        //            {
+        //                query = query.Include(expression);
+        //            }
+        //            return await query.Skip(page * numPerPage).Take(numPerPage).ToListAsync();   
+        //        }
         public async Task<IEnumerable<T>> FindByConditionAsync(Expression<Func<T, bool>> expression)
         {
             return await this.RepositoryContext.Set<T>().Where(expression).ToListAsync();
+        }
+
+        public IQueryable<T> FindByCondition(Expression<Func<T, bool>> expression)
+        {
+            return this.RepositoryContext.Set<T>().Where(expression).AsQueryable();
         }
 
         public void Create(T entity)
@@ -61,6 +70,7 @@ namespace LibraryManagement.Data
         {
             await this.RepositoryContext.SaveChangesAsync();
         }
+
     }
 
 }
