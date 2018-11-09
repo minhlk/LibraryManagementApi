@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace LibraryManagement.Data
 {
@@ -15,8 +16,14 @@ namespace LibraryManagement.Data
         public async Task<IEnumerable<Author>> GetAllAuthorsAsync()
         {
             var authors = await FindAllAsync();
-            return authors;
+            return authors.OrderBy(x => x.Name);
         }
+
+        public async Task<int> CountAllAuthorsAsync(string searchKeyWords = "")
+        {
+            return await CountAll(author => searchKeyWords.Trim().Length == 0 || author.Name.ToLower().Contains(searchKeyWords.Trim().ToLower())).CountAsync();
+        }
+
         public async Task<Author> GetAuthorByIdAsync(int authorId)
         {
             var author = await FindByConditionAsync(x => x.Id == authorId);
@@ -40,6 +47,14 @@ namespace LibraryManagement.Data
             var author = await GetAuthorByIdAsync(authorId);
             Delete(author);
             await SaveAsync();
+        }
+
+        public async Task<IEnumerable<Author>> GetAuthorsAsync(int page, int numPerPage, string searchKeyWords = "")
+        {
+            return await this.FindByCondition(author => searchKeyWords.Trim().Length == 0 || author.Name.ToLower().Contains(searchKeyWords.Trim().ToLower()))
+                .Skip(page * numPerPage)
+                .Take(numPerPage)
+                .ToListAsync();
         }
     }
 }

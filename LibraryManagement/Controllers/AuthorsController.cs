@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using LibraryManagement.Services;
 using Microsoft.AspNetCore.Authorization;
+using LibraryManagement.Config;
 
 namespace LibraryManagement.Controllers
 {
@@ -21,17 +22,28 @@ namespace LibraryManagement.Controllers
             _authorRepository = authorRepository;
         }
 
-
-        // GET: api/Authors
         [AllowAnonymous]
-        [HttpGet]
-        public async Task<IEnumerable<Author>> GetAuthor()
+        [HttpGet("size")]
+        public async Task<int> GetSize([FromQuery(Name = "searchKeyWords")] string searchKeyWords)
+        {
+            return await _authorRepository.CountAllAuthorsAsync(searchKeyWords ?? "");
+        }
+        [AllowAnonymous]
+        [HttpGet("all")]
+        public async Task<IEnumerable<Author>> GetAllAuthor()
         {
             return await _authorRepository.GetAllAuthorsAsync();
         }
 
+
+        // GET: api/Authors
+        [AllowAnonymous]
+        [HttpGet]
+        public async Task<IEnumerable<Author>> GetAuthor([FromQuery(Name = "page")] int page, [FromQuery(Name = "searchKeyWords")] string searchKeyWords)
+        {
+            return await _authorRepository.GetAuthorsAsync(page, GlobalVariables.PageSize, searchKeyWords ?? "");
+        }
         // GET: api/Authors/5
-        //        [AllowAnonymous]
         [AllowAnonymous]
         [HttpGet("{id}")]
         public async Task<IActionResult> GetAuthor([FromRoute] int id)
@@ -45,10 +57,10 @@ namespace LibraryManagement.Controllers
 
             if (author == null)
             {
-                return NotFound();
+                return NotFound(new { message = "Not found this author", status = 400 });
             }
 
-            return Ok(author);
+            return Ok(new { message = "Success", status = 200, result = author });
         }
 
         // PUT: api/Authors/5
@@ -69,7 +81,7 @@ namespace LibraryManagement.Controllers
             await _authorRepository.UpdateAuthorAsync(id, author);
 
 
-            return NoContent();
+            return Ok(new { message = "Save Success", status = 200, result = "" });
         }
 
         // POST: api/Authors
@@ -84,7 +96,7 @@ namespace LibraryManagement.Controllers
 
             await _authorRepository.CreateAuthorAsync(author);
 
-            return CreatedAtAction("GetAuthor", new { id = author.Id }, author);
+            return RedirectToAction("GetAuthor", new { id = author.Id });
         }
 
         // DELETE: api/Authors/5
@@ -100,12 +112,12 @@ namespace LibraryManagement.Controllers
             var author = await _authorRepository.GetAuthorByIdAsync(id);
             if (author == null)
             {
-                return NotFound();
+                return BadRequest(new { message = "Can't delete this author", status = 400 });
             }
 
             await _authorRepository.DeleteAuthorAsync(id);
 
-            return Ok(author);
+            return Ok(new { message = "Delete Success", status = 200, result = author });
         }
     }
 }

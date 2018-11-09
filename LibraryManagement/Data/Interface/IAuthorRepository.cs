@@ -13,5 +13,7 @@ namespace LibraryManagement.Data.Interface
         Task CreateAuthorAsync(Author author);
         Task UpdateAuthorAsync(int authorId,Author author);
         Task DeleteAuthorAsync(int authorId);
+        Task<int> CountAllAuthorsAsync(string searchKeyWords = "");
+        Task<IEnumerable<Author>> GetAuthorsAsync(int page, int numPerPage, string searchKeyWords = "");
     }
 }
