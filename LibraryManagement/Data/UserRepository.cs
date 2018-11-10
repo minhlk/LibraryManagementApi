@@ -81,6 +81,19 @@ namespace LibraryManagement.Data
 
             return null;
         }
+
+        public async Task<IEnumerable<User>> GetUsersAsync(int page, int numPerPage, string searchKeyWords = "")
+        {
+            return await this.FindByCondition(user => searchKeyWords.Trim().Length == 0 || user.Name.ToLower().Contains(searchKeyWords.Trim().ToLower()))
+                .Skip(page * numPerPage)
+                .Take(numPerPage)
+                .ToListAsync();
+        }
+
+        public async Task<int> CountAllUsersAsync(string searchKeyWords = "")
+        {
+            return await CountAll(user => searchKeyWords.Trim().Length == 0 || user.Name.ToLower().Contains(searchKeyWords.Trim().ToLower())).CountAsync();
+        }
     }
 
 

@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using LibraryManagement.Services;
 using Microsoft.AspNetCore.Authorization;
+using LibraryManagement.Config;
 
 namespace LibraryManagement.Controllers
 {
@@ -28,9 +29,9 @@ namespace LibraryManagement.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Admin,Librarian")]
-        public async Task<IEnumerable<User>> GetUser()
+        public async Task<IEnumerable<User>> GetUser([FromQuery(Name = "page")] int page, [FromQuery(Name = "searchKeyWords")] string searchKeyWords)
         {
-            return await _userRepository.GetAllUsersAsync();
+            return await _userRepository.GetUsersAsync(page, GlobalVariables.PageSize, searchKeyWords ?? "");
         }
 
         // GET: api/Users/5
@@ -130,5 +131,17 @@ namespace LibraryManagement.Controllers
             return Ok(new { message = "Account is created", status = 200 });
         }
 
+        [Authorize(Roles = "Admin,Librarian")]
+        [HttpGet("size")]
+        public async Task<int> GetSize([FromQuery(Name = "searchKeyWords")] string searchKeyWords)
+        {
+            return await _userRepository.CountAllUsersAsync(searchKeyWords ?? "");
+        }
+        [Authorize(Roles = "Admin,Librarian")]
+        [HttpGet("all")]
+        public async Task<IEnumerable<User>> GetAllAuthor()
+        {
+            return await _userRepository.GetAllUsersAsync();
+        }
     }
 }
