@@ -71,8 +71,8 @@ namespace LibraryManagement.Controllers
 
             await _userRepository.UpdateUserAsync(user);
 
-           
-            return Ok();
+
+            return Ok(new { message = "Save Success", status = 200, result = "" });
         }
 
         // POST: api/Users
