@@ -9,6 +9,7 @@ namespace LibraryManagement.Data.Interface
     public interface IBookRepository
     {
         Task<IEnumerable<Book>> GetAllBooksAsync();
+        Task<IEnumerable<Book>> GetListAsync();
         Task<IEnumerable<Book>> GetBooksAsync(int page, int numPerPage, string searchKeyWords = "");
         Task<Book> GetBookByIdAsync(long bookId);
 //        Task<BookExtended> GetBookWithDetailsAsync(Guid BookId);
