@@ -57,6 +57,13 @@ namespace LibraryManagement.Controllers
 
             return Ok(new { message = "Success", status = 200, result = book });
         }
+        // GET: api/Books/list
+        [AllowAnonymous]
+        [HttpGet("list")]
+        public async Task<IEnumerable<Book>> GetBookList()
+        {
+            return await _bookRepository.GetListAsync();
+        }
 
         // PUT: api/Books/5
         [HttpPut("{id}")]

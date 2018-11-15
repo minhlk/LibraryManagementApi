@@ -10,6 +10,7 @@ namespace LibraryManagement.Data.Interface
     {
         Task<IEnumerable<User>> GetAllUsersAsync();
         Task<User> GetUserByIdAsync(long userId);
+        Task<IEnumerable<User>> GetUserByRoleAsync(long roleId);
         Task<User> CreateUserAsync(User user);
         Task UpdateUserAsync(User newUser);
         Task DeleteUserAsync(long userId);

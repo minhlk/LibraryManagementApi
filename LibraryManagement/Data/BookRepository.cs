@@ -26,15 +26,26 @@ namespace LibraryManagement.Data
         {
             return await CountAll(book => searchKeyWords.Trim().Length == 0 || book.Name.ToLower().Contains(searchKeyWords.Trim().ToLower())).CountAsync();
         }
-        public async Task<IEnumerable<Book>> GetBooksAsync(int page, int numPerPage,string searchKeyWords = "")
+        public async Task<IEnumerable<Book>> GetBooksAsync(int page, int numPerPage, string searchKeyWords = "")
         {
             return await this.FindByCondition(book => searchKeyWords.Trim().Length == 0 || book.Name.ToLower().Contains(searchKeyWords.Trim().ToLower()))
                 .Include(b => b.IdAuthorNavigation)
-                .Include(b=> b.BookGenre)
+                .Include(b => b.BookGenre)
                 .ThenInclude(b => b.IdGenreNavigation)
                 .Skip(page * numPerPage)
                 .Take(numPerPage)
                 .ToListAsync();
+        }
+        public async Task<IEnumerable<Book>> GetListAsync()
+        {
+            var books = await this.GetAllBooksAsync();
+            var result = books.Select(p => new Book
+            {
+                //Add more properties if need
+                Id = p.Id,
+                Name = p.Name,
+            }).ToList();
+            return result;
         }
 
         public async Task<Book> GetBookByIdAsync(long bookId)
@@ -42,8 +53,8 @@ namespace LibraryManagement.Data
             var book = await FindByConditionAsync(x => x.Id == bookId);
             var rs = book.FirstOrDefault();
             //Get Details about genres
-            if(rs != null)
-            rs.BookGenre = await RepositoryContext.BookGenre.Where(b => b.IdBook == bookId).ToListAsync();
+            if (rs != null)
+                rs.BookGenre = await RepositoryContext.BookGenre.Where(b => b.IdBook == bookId).ToListAsync();
             return rs;
         }
 
@@ -53,7 +64,7 @@ namespace LibraryManagement.Data
             await SaveAsync();
         }
 
-        public async Task UpdateBookAsync( Book newBook)
+        public async Task UpdateBookAsync(Book newBook)
         {
             var book = await GetBookByIdAsync(newBook.Id);
             book.Map(newBook);

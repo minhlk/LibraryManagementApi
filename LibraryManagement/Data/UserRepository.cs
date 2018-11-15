@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace LibraryManagement.Data
 {
-    public class UserRepository : RepositoryBase<User>,IUserRepository
+    public class UserRepository : RepositoryBase<User>, IUserRepository
     {
         public UserRepository(LibraryManagementContext repositoryContext) : base(repositoryContext)
         {
@@ -22,13 +22,23 @@ namespace LibraryManagement.Data
             return users.OrderBy(x => x.Name);
 
         }
+        public async Task<IEnumerable<User>> GetUserByRoleAsync(long roleId)
+        {
+            var users = await FindByConditionAsync(x => x.IdRole == roleId);
+            var result = users.Select(p => new User
+            {
+                Id = p.Id,
+                Name = p.Name
+            }).ToList();
+            return result;
+        }
         public async Task<User> GetUserByIdAsync(long userId)
         {
             var user = await FindByConditionAsync(x => x.Id == userId);
             var rs = user.FirstOrDefault();
             //Get Details about books
-            if(rs !=null)
-            rs.UserBook = await RepositoryContext.UserBook.Where(b => b.IdUser == userId).ToListAsync();
+            if (rs != null)
+                rs.UserBook = await RepositoryContext.UserBook.Where(b => b.IdUser == userId).ToListAsync();
             return rs;
         }
 
@@ -47,7 +57,7 @@ namespace LibraryManagement.Data
 
         }
 
-        public async Task UpdateUserAsync( User newUser)
+        public async Task UpdateUserAsync(User newUser)
         {
             var user = await GetUserByIdAsync(newUser.Id);
             //TODO : update user password
@@ -70,7 +80,7 @@ namespace LibraryManagement.Data
 
         public async Task<User> AuthenticateUser(string userName, string password)
         {
-            var user = await  FindByConditionAsync(u => u.Password == password && u.UserName == userName);
+            var user = await FindByConditionAsync(u => u.Password == password && u.UserName == userName);
             var rs = user.FirstOrDefault();
             //Get Details about user role
             if (rs != null)
