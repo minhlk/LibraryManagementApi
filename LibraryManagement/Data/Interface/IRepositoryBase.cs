@@ -18,5 +18,7 @@ namespace LibraryManagement.Data.Interface
 //        Task<IEnumerable<T>> FindAllByPageAsync(int page, int numPerPage, params Expression<Func<T, object>>[] expressions);
         Task<int> CountAllAsync();
         IQueryable<T> CountAll(Expression<Func<T, bool>> expression);
+        IQueryable<T> GetMany(Expression<Func<T, bool>> where, List<string> includes = null);
+        IQueryable<T> GetAll(List<string> includes = null);
     }
 }

@@ -15,10 +15,12 @@ namespace LibraryManagement.Controllers
     public class UserBooksController : ControllerBase
     {
         private readonly IUserBookRepository _userBookRepository;
+        private readonly IUserBookService _userBookService;
 
-        public UserBooksController(IUserBookRepository userBookRepository)
+        public UserBooksController(IUserBookRepository userBookRepository, IUserBookService userBookService)
         {
             _userBookRepository = userBookRepository;
+            _userBookService = userBookService;
         }
 
 
@@ -27,7 +29,15 @@ namespace LibraryManagement.Controllers
         [HttpGet]
         public async Task<IEnumerable<UserBook>> GetUserBook()
         {
-            return await _userBookRepository.GetAllUserBooksAsync();
+            return await _userBookService.GetAll();
+        }
+
+        // GET: api/UserBooks/lending
+        [AllowAnonymous]
+        [HttpGet("lending")]
+        public async Task<IEnumerable<UserBook>> GetUserBookNullEndDate()
+        {
+            return await _userBookService.GetUserBookNullEndDate();
         }
 
         // GET: api/UserBooks/5
@@ -44,10 +54,10 @@ namespace LibraryManagement.Controllers
 
             if (userBook == null)
             {
-                return NotFound();
+                return NotFound(new { message = "Can't find this book", status = 400 });
             }
 
-            return Ok(userBook);
+            return Ok(new { message = "Success", status = 200, result = userBook });
         }
 
         // PUT: api/UserBooks/5
@@ -62,13 +72,13 @@ namespace LibraryManagement.Controllers
 
             if (id != userBook.Id)
             {
-                return BadRequest();
+                return NotFound(new { message = "Can't update this book", status = 400 });
             }
 
             await _userBookRepository.UpdateUserBookAsync(id, userBook);
 
 
-            return NoContent();
+            return Ok(new { message = "Save Success", status = 200, result = "" });
         }
 
         // POST: api/UserBooks
@@ -83,7 +93,7 @@ namespace LibraryManagement.Controllers
 
             await _userBookRepository.CreateUserBookAsync(userBook);
 
-            return CreatedAtAction("GetUserBook", new { id = userBook.Id }, userBook);
+            return RedirectToAction("GetUserBook", new { id = userBook.Id });
         }
 
         // DELETE: api/UserBooks/5
@@ -99,12 +109,12 @@ namespace LibraryManagement.Controllers
             var userBook = await _userBookRepository.GetUserBookByIdAsync(id);
             if (userBook == null)
             {
-                return NotFound();
+                return BadRequest(new { message = "Can't delete this user book", status = 400 });
             }
 
             await _userBookRepository.DeleteUserBookAsync(id);
 
-            return Ok(userBook);
+            return Ok(new { message = "Delete Success", status = 200, result = userBook });
         }
 
 

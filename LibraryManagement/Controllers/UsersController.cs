@@ -54,8 +54,7 @@ namespace LibraryManagement.Controllers
         }
         // GET: api/Users/getByRole
         [HttpGet("getbyrole/{id}")]
-        [AllowAnonymous] //Need to edit here
-        //[Authorize(Roles = "Admin,Librarian")]
+        [Authorize(Roles = "Admin,Librarian")]
         public async Task<IEnumerable<User>> GetUserByRole([FromRoute] long id)
         {
             return await _userRepository.GetUserByRoleAsync(id);
