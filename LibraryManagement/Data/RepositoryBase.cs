@@ -23,6 +23,37 @@ namespace LibraryManagement.Data
         {
             return await this.RepositoryContext.Set<T>().ToListAsync();
         }
+        public virtual IQueryable<T> GetAll(List<string> includes = null)
+        {
+            var query = this.RepositoryContext.Set<T>().AsQueryable();
+            if (includes != null)
+            {
+                foreach (var include in includes)
+                {
+                    query = query.Include(include);
+                }
+            }
+            return query;
+        }
+        public virtual IQueryable<T> GetMany(Expression<Func<T, bool>> where, List<string> includes = null)
+        {
+            try
+            {
+                var query = this.RepositoryContext.Set<T>().AsQueryable();
+                if (includes != null)
+                {
+                    foreach (var include in includes)
+                    {
+                        query = query.Include(include);
+                    }
+                }
+                return where != null ? query.Where(where) : query;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("GetMany Repository type of " + typeof(T), ex);
+            }
+        }
         public async Task<int> CountAllAsync()
         {
             return await this.RepositoryContext.Set<T>().CountAsync();

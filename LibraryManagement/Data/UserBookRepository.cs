@@ -1,5 +1,6 @@
 ﻿using LibraryManagement.Data.Interface;
 using LibraryManagement.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,7 +15,18 @@ namespace LibraryManagement.Data
         }
         public async Task<IEnumerable<UserBook>> GetAllUserBooksAsync()
         {
-            var userBooks = await FindAllAsync();
+            var userBooks = await GetAll()
+                .Include(x => x.IdUserNavigation)
+                .Include(x => x.IdBookNavigation)
+                .ToListAsync();
+            return userBooks;
+        }
+        public async Task<IEnumerable<UserBook>> GetUserBookNullEndDate()
+        {
+            var userBooks = await GetMany(n => n.EndDate == null)
+                .Include(x => x.IdUserNavigation)
+                .Include(x => x.IdBookNavigation)
+                .ToListAsync();
             return userBooks;
         }
         public async Task<UserBook> GetUserBookByIdAsync(int userBookId)
