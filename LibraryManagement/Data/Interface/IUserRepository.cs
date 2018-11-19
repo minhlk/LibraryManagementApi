@@ -15,5 +15,7 @@ namespace LibraryManagement.Data.Interface
         Task UpdateUserAsync(User newUser);
         Task DeleteUserAsync(long userId);
         Task<User> AuthenticateUser(String userName, String password);
+        Task<int> CountAllUsersAsync(string searchKeyWords = "");
+        Task<IEnumerable<User>> GetUsersAsync(int page, int numPerPage, string searchKeyWords = "");
     }
 }
