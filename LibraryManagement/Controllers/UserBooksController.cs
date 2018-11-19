@@ -3,6 +3,7 @@ using LibraryManagement.Data.Interface;
 using LibraryManagement.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using LibraryManagement.Config;
 using System.Threading.Tasks;
 using LibraryManagement.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -15,29 +16,37 @@ namespace LibraryManagement.Controllers
     public class UserBooksController : ControllerBase
     {
         private readonly IUserBookRepository _userBookRepository;
-        private readonly IUserBookService _userBookService;
 
-        public UserBooksController(IUserBookRepository userBookRepository, IUserBookService userBookService)
+        public UserBooksController(IUserBookRepository userBookRepository)
         {
             _userBookRepository = userBookRepository;
-            _userBookService = userBookService;
         }
-
-
         // GET: api/UserBooks
         [AllowAnonymous]
         [HttpGet]
-        public async Task<IEnumerable<UserBook>> GetUserBook()
+        public async Task<IEnumerable<UserBook>> GetUserBook([FromQuery(Name = "page")] int page, [FromQuery(Name = "searchKeyWords")] string searchKeyWords)
         {
-            return await _userBookService.GetAll();
+            return await _userBookRepository.GetUserBooksAsync(page, GlobalVariables.PageSize, searchKeyWords ?? "");
         }
-
+        [AllowAnonymous]
+        [HttpGet("size")]
+        public async Task<int> GetSize([FromQuery(Name = "searchKeyWords")] string searchKeyWords)
+        {
+            return await _userBookRepository.CountAllUserBooksAsync(searchKeyWords ?? "");
+        }
         // GET: api/UserBooks/lending
         [AllowAnonymous]
         [HttpGet("lending")]
-        public async Task<IEnumerable<UserBook>> GetUserBookNullEndDate()
+        public async Task<IEnumerable<UserBook>> GetUserBookNullEndDate([FromQuery(Name = "page")] int page, [FromQuery(Name = "searchKeyWords")] string searchKeyWords)
         {
-            return await _userBookService.GetUserBookNullEndDate();
+            return await _userBookRepository.GetUserBookNullEndDate(page, GlobalVariables.PageSize, searchKeyWords ?? "");
+        }
+
+        [AllowAnonymous]
+        [HttpGet("lendingsize")]
+        public async Task<int> GetLendingSize([FromQuery(Name = "searchKeyWords")] string searchKeyWords)
+        {
+            return await _userBookRepository.CountAllUserBooksNullEndDateAsync(searchKeyWords ?? "");
         }
 
         // GET: api/UserBooks/5

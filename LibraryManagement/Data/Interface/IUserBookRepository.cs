@@ -13,6 +13,9 @@ namespace LibraryManagement.Data.Interface
         Task CreateUserBookAsync(UserBook userBook);
         Task UpdateUserBookAsync(int userBookId, UserBook userBook);
         Task DeleteUserBookAsync(int userBookId);
-        Task<IEnumerable<UserBook>> GetUserBookNullEndDate();
+        Task<IEnumerable<UserBook>> GetUserBookNullEndDate(int page, int numPerPage, string searchKeyWords = "");
+        Task<IEnumerable<UserBook>> GetUserBooksAsync(int page, int numPerPage, string searchKeyWords = "");
+        Task<int> CountAllUserBooksAsync(string searchKeyWords = "");
+        Task<int> CountAllUserBooksNullEndDateAsync(string searchKeyWords = "");
     }
 }

@@ -20,7 +20,6 @@ using Swashbuckle.AspNetCore.Swagger;
 using System.Text;
 using System.Threading.Tasks;
 using LibraryManagement.Models;
-using LibraryManagement.Services.Implements;
 
 namespace LibraryManagement
 {
@@ -60,7 +59,6 @@ namespace LibraryManagement
             services.AddScoped<IBookGenreRepository, BookGenreRepository>();
             services.AddScoped<IRoleRepository, RoleRepository>();
             services.AddScoped<IUserBookRepository, UserBookRepository>();
-            services.AddScoped<IUserBookService, UserBookService>();
 
 
 
