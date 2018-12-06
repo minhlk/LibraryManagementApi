@@ -90,6 +90,7 @@ namespace LibraryManagement.Data
             oldBook.IdAuthor = newBook.IdAuthor;
             oldBook.BookGenre = newBook.BookGenre;
             oldBook.Image = newBook.Image;
+            oldBook.Description = newBook.Description;
 
         }
     }
