@@ -16,7 +16,7 @@ namespace LibraryManagement.Services
         private readonly IUserRepository _userRepository;
         private readonly IOptions<AppSettings> _config;
         private readonly byte DefaultRole = 3;
-        public UserService(IUserRepository userRepository,IOptions<AppSettings> config)
+        public UserService(IUserRepository userRepository, IOptions<AppSettings> config)
         {
             this._userRepository = userRepository;
             this._config = config;
@@ -24,8 +24,8 @@ namespace LibraryManagement.Services
         public UserAuth Authenticate(string userName, string password)
         {
             //TODO : hash password here
-           //  call user repository to confirm user
-            var user = _userRepository.AuthenticateUser(userName, Password.EncryptString(_config.Value.SecretKey,password));
+            //  call user repository to confirm user
+            var user = _userRepository.AuthenticateUser(userName, Password.EncryptString(_config.Value.SecretKey, password));
             if (user.Result != null)
             {
                 var tokenHandler = new JwtSecurityTokenHandler();
@@ -35,12 +35,12 @@ namespace LibraryManagement.Services
                     Subject = new ClaimsIdentity(new Claim[]
                     {
                         new Claim(ClaimTypes.Name,user.Result.Id.ToString()),
-                        new Claim(ClaimTypes.Role, user.Result.IdRoleNavigation.RoleName), 
-                        
+                        new Claim(ClaimTypes.Role, user.Result.IdRoleNavigation.RoleName),
+
                     }),
                     Expires = DateTime.UtcNow.AddDays(7),
                     SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
-                    
+
                 };
                 var token = tokenHandler.CreateToken(tokenDescriptor);
                 var tokenString = tokenHandler.WriteToken(token);
@@ -63,21 +63,21 @@ namespace LibraryManagement.Services
         {
             //TODO : add logic check here 
             user.Password = Password.EncryptString(_config.Value.SecretKey, user.Password);
-            user.IdRole = DefaultRole;
+            user.IdRole = user.IdRole != null ? user.IdRole : DefaultRole;
             return await _userRepository.CreateUserAsync(user);
         }
 
         public async Task<UserAuth> GetById(int userId)
         {
             var user = await _userRepository.GetUserByIdAsync(userId);
-            if(user.IdRole != null)
+            if (user.IdRole != null)
                 return new UserAuth()
-            {
-                UserName = user.UserName,
-                Name = user.Name,
-                Phone = user.Phone,
-                YearOfBirth = user.YearOfBirth
-            };
+                {
+                    UserName = user.UserName,
+                    Name = user.Name,
+                    Phone = user.Phone,
+                    YearOfBirth = user.YearOfBirth
+                };
             return null;
         }
     }
