@@ -23,7 +23,7 @@ namespace LibraryManagement.Data
         }
         public async Task<IEnumerable<UserBook>> GetUserBooksAsync(int page, int numPerPage, string searchKeyWords = "")
         {
-            return await this.FindByCondition(userBook => searchKeyWords.Trim().Length == 0 || userBook.IdUserNavigation.Name.ToLower().Contains(searchKeyWords.Trim().ToLower()))
+            return await this.FindByCondition(userBook => searchKeyWords.Trim().Length == 0 || userBook.IdUserNavigation.Name.ToLower().Contains(searchKeyWords.Trim().ToLower()) || userBook.IdBookNavigation.Name.ToLower().Contains(searchKeyWords.Trim().ToLower()))
                 .Include(b => b.IdBookNavigation)
                 .Include(b => b.IdUserNavigation)
                 .Skip(page * numPerPage)
@@ -32,16 +32,16 @@ namespace LibraryManagement.Data
         }
         public async Task<int> CountAllUserBooksAsync(string searchKeyWords = "")
         {
-            return await CountAll(userBook => searchKeyWords.Trim().Length == 0 || userBook.IdUserNavigation.Name.ToLower().Contains(searchKeyWords.Trim().ToLower())).CountAsync();
+            return await CountAll(userBook => searchKeyWords.Trim().Length == 0 || userBook.IdUserNavigation.Name.ToLower().Contains(searchKeyWords.Trim().ToLower()) || userBook.IdBookNavigation.Name.ToLower().Contains(searchKeyWords.Trim().ToLower())).CountAsync();
         }
         public async Task<int> CountAllUserBooksNullEndDateAsync(string searchKeyWords = "")
         {
-            return await CountAll(userBook => (searchKeyWords.Trim().Length == 0 && userBook.EndDate == null) || (userBook.IdUserNavigation.Name.ToLower().Contains(searchKeyWords.Trim().ToLower()) && userBook.EndDate == null)).CountAsync();
+            return await CountAll(userBook => (searchKeyWords.Trim().Length == 0 && userBook.EndDate == null) || (userBook.IdUserNavigation.Name.ToLower().Contains(searchKeyWords.Trim().ToLower()) && userBook.EndDate == null) || (userBook.IdBookNavigation.Name.ToLower().Contains(searchKeyWords.Trim().ToLower()) && userBook.EndDate == null)).CountAsync();
         }
 
         public async Task<IEnumerable<UserBook>> GetUserBookNullEndDate(int page, int numPerPage, string searchKeyWords = "")
         {
-            var userBooks = await FindByCondition(userBook => (searchKeyWords.Trim().Length == 0 && userBook.EndDate == null) || (userBook.IdUserNavigation.Name.ToLower().Contains(searchKeyWords.Trim().ToLower()) && userBook.EndDate == null))
+            var userBooks = await FindByCondition(userBook => (searchKeyWords.Trim().Length == 0 && userBook.EndDate == null) || (userBook.IdUserNavigation.Name.ToLower().Contains(searchKeyWords.Trim().ToLower()) && userBook.EndDate == null) || (userBook.IdBookNavigation.Name.ToLower().Contains(searchKeyWords.Trim().ToLower()) && userBook.EndDate == null))
                 .Include(x => x.IdUserNavigation)
                 .Include(x => x.IdBookNavigation)
                 .Skip(page * numPerPage)
