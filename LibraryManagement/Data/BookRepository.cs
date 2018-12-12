@@ -26,15 +26,17 @@ namespace LibraryManagement.Data
         {
             return await CountAll(book => searchKeyWords.Trim().Length == 0 || book.Name.ToLower().Contains(searchKeyWords.Trim().ToLower())).CountAsync();
         }
-        public async Task<IEnumerable<Book>> GetBooksAsync(int page, int numPerPage, string searchKeyWords = "")
+        public async Task<IEnumerable<Book>> GetBooksAsync(int page, int numPerPage, string searchKeyWords = "", string genre = "", string author = "")
         {
-            return await this.FindByCondition(book => searchKeyWords.Trim().Length == 0 || book.Name.ToLower().Contains(searchKeyWords.Trim().ToLower()))
+            var result = await this.FindByCondition(book => searchKeyWords.Trim().Length == 0 || book.Name.ToLower().Contains(searchKeyWords.Trim().ToLower()))
+                .Where(o => string.IsNullOrEmpty(author) || o.IdAuthor == Convert.ToInt64(author))
                 .Include(b => b.IdAuthorNavigation)
                 .Include(b => b.BookGenre)
                 .ThenInclude(b => b.IdGenreNavigation)
                 .Skip(page * numPerPage)
                 .Take(numPerPage)
                 .ToListAsync();
+            return result;
         }
         public async Task<IEnumerable<Book>> GetListAsync()
         {

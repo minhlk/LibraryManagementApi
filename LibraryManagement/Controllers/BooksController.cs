@@ -29,14 +29,14 @@ namespace LibraryManagement.Controllers
         [HttpGet("size")]
         public async Task<int> GetSize([FromQuery(Name = "searchKeyWords")] string searchKeyWords)
         {
-            return await _bookRepository.CountAllBooksAsync(searchKeyWords??"");/// GlobalVariables.PageSize;
+            return await _bookRepository.CountAllBooksAsync(searchKeyWords ?? "");/// GlobalVariables.PageSize;
         }
         // GET: api/Books
         [AllowAnonymous]
         [HttpGet]
-        public async Task<IEnumerable<Book>> GetBook([FromQuery(Name = "page")] int page, [FromQuery(Name = "searchKeyWords")] string searchKeyWords)
+        public async Task<IEnumerable<Book>> GetBook([FromQuery(Name = "page")] int page, [FromQuery(Name = "searchKeyWords")] string searchKeyWords, [FromQuery(Name = "genre")]string genre, [FromQuery(Name = "author")]string author)
         {
-            return await _bookRepository.GetBooksAsync(page,GlobalVariables.PageSize,searchKeyWords??"");
+            return await _bookRepository.GetBooksAsync(page, GlobalVariables.PageSize, searchKeyWords ?? "", genre ?? "", author ?? "");
         }
         // GET: api/Books/5
         [AllowAnonymous]
@@ -121,7 +121,7 @@ namespace LibraryManagement.Controllers
 
             return Ok(new { message = "Delete Success", status = 200, result = book });
         }
-      
+
 
 
     }

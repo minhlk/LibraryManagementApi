@@ -10,7 +10,7 @@ namespace LibraryManagement.Data.Interface
     {
         Task<IEnumerable<Book>> GetAllBooksAsync();
         Task<IEnumerable<Book>> GetListAsync();
-        Task<IEnumerable<Book>> GetBooksAsync(int page, int numPerPage, string searchKeyWords = "");
+        Task<IEnumerable<Book>> GetBooksAsync(int page, int numPerPage, string searchKeyWords = "", string genre = "", string author = "");
         Task<Book> GetBookByIdAsync(long bookId);
 //        Task<BookExtended> GetBookWithDetailsAsync(Guid BookId);
         Task CreateBookAsync(Book book);
