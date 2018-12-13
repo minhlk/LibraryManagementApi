@@ -16,10 +16,12 @@ namespace LibraryManagement.Controllers
     public class UserBooksController : ControllerBase
     {
         private readonly IUserBookRepository _userBookRepository;
+        private readonly IUserBookService _userBookService;
 
-        public UserBooksController(IUserBookRepository userBookRepository)
+        public UserBooksController(IUserBookRepository userBookRepository, IUserBookService userBookService)
         {
             _userBookRepository = userBookRepository;
+            _userBookService = userBookService;
         }
         // GET: api/UserBooks
         [AllowAnonymous]
@@ -84,13 +86,31 @@ namespace LibraryManagement.Controllers
                 return NotFound(new { message = "Can't update this book", status = 400 });
             }
 
-            await _userBookRepository.UpdateUserBookAsync(id, userBook);
+            var result = await _userBookService.EditUserBook(id, userBook);
 
+            if (result.Success)
+            {
+                return Ok(new { message = "Save Success", status = 200, result = "" });
 
-            return Ok(new { message = "Save Success", status = 200, result = "" });
+            }
+            else
+                return BadRequest(new { message = result.Message, status = 400 });
         }
 
         // POST: api/UserBooks
+        //[Authorize(Roles = "Admin,Librarian")]
+        //[HttpPost]
+        //public async Task<IActionResult> PostUserBook([FromBody] UserBook userBook)
+        //{
+        //    if (!ModelState.IsValid)
+        //    {
+        //        return BadRequest(ModelState);
+        //    }
+
+        //    await _userBookRepository.CreateUserBookAsync(userBook);
+
+        //    return RedirectToAction("GetUserBook", new { id = userBook.Id });
+        //}
         [Authorize(Roles = "Admin,Librarian")]
         [HttpPost]
         public async Task<IActionResult> PostUserBook([FromBody] UserBook userBook)
@@ -99,10 +119,15 @@ namespace LibraryManagement.Controllers
             {
                 return BadRequest(ModelState);
             }
-
-            await _userBookRepository.CreateUserBookAsync(userBook);
-
-            return RedirectToAction("GetUserBook", new { id = userBook.Id });
+            var result = await _userBookService.AddUserBook(userBook);
+            if (!result.Success)
+            {
+                return BadRequest(new { message = result.Message, status = 400 });
+            }
+            else
+            {
+                return RedirectToAction("GetUserBook", new { id = userBook.Id });
+            }
         }
 
         // DELETE: api/UserBooks/5
