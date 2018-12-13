@@ -26,10 +26,9 @@ namespace LibraryManagement.Data
         {
             return await CountAll(book => searchKeyWords.Trim().Length == 0 || book.Name.ToLower().Contains(searchKeyWords.Trim().ToLower())).CountAsync();
         }
-        public async Task<IEnumerable<Book>> GetBooksAsync(int page, int numPerPage, string searchKeyWords = "", string genre = "", string author = "")
+        public async Task<IEnumerable<Book>> GetBooksAsync(int page, int numPerPage, string searchKeyWords = "")
         {
             var result = await this.FindByCondition(book => searchKeyWords.Trim().Length == 0 || book.Name.ToLower().Contains(searchKeyWords.Trim().ToLower()))
-                .Where(o => string.IsNullOrEmpty(author) || o.IdAuthor == Convert.ToInt64(author))
                 .Include(b => b.IdAuthorNavigation)
                 .Include(b => b.BookGenre)
                 .ThenInclude(b => b.IdGenreNavigation)
@@ -37,6 +36,26 @@ namespace LibraryManagement.Data
                 .Take(numPerPage)
                 .ToListAsync();
             return result;
+        }
+        public async Task<Object> GetBooksByConditionAsync(int page, int numPerPage, string searchKeyWords = "", string genre = "", string author = "")
+        {
+            var count = 0;
+            var result = await this.FindByCondition(book => searchKeyWords.Trim().Length == 0 || book.Name.ToLower().Contains(searchKeyWords.Trim().ToLower()))
+                .Where(o => string.IsNullOrEmpty(author) || o.IdAuthor == Convert.ToInt64(author))
+                .Include(b => b.IdAuthorNavigation)
+                .Include(b => b.BookGenre)
+                .ToListAsync();
+            result = result.Where(o => string.IsNullOrEmpty(genre) || o.BookGenre.Select(l => l.IdGenre).Contains(Convert.ToInt64(genre))).ToList();
+            count = result.Count();
+            result = result.Skip(page * numPerPage)
+                            .Take(numPerPage)
+                            .ToList();
+            var obj = new
+            {
+                entities = result,
+                count = count
+            };
+            return obj;
         }
         public async Task<IEnumerable<Book>> GetListAsync()
         {
@@ -52,11 +71,15 @@ namespace LibraryManagement.Data
 
         public async Task<Book> GetBookByIdAsync(long bookId)
         {
-            var book = await FindByConditionAsync(x => x.Id == bookId);
+            var book = await FindByCondition(x => x.Id == bookId)
+                .Include(b => b.IdAuthorNavigation)
+                .ToListAsync();
             var rs = book.FirstOrDefault();
             //Get Details about genres
             if (rs != null)
-                rs.BookGenre = await RepositoryContext.BookGenre.Where(b => b.IdBook == bookId).ToListAsync();
+                rs.BookGenre = await RepositoryContext.BookGenre.Where(b => b.IdBook == bookId)
+                    .Include(a=> a.IdGenreNavigation)
+                    .ToListAsync();
             return rs;
         }
 

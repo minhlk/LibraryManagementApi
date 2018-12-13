@@ -34,9 +34,16 @@ namespace LibraryManagement.Controllers
         // GET: api/Books
         [AllowAnonymous]
         [HttpGet]
-        public async Task<IEnumerable<Book>> GetBook([FromQuery(Name = "page")] int page, [FromQuery(Name = "searchKeyWords")] string searchKeyWords, [FromQuery(Name = "genre")]string genre, [FromQuery(Name = "author")]string author)
+        public async Task<IEnumerable<Book>> GetBook([FromQuery(Name = "page")] int page, [FromQuery(Name = "searchKeyWords")] string searchKeyWords)
         {
-            return await _bookRepository.GetBooksAsync(page, GlobalVariables.PageSize, searchKeyWords ?? "", genre ?? "", author ?? "");
+            return await _bookRepository.GetBooksAsync(page, GlobalVariables.PageSize, searchKeyWords ?? "");
+        }
+        // GET: api/Books/condition
+        [AllowAnonymous]
+        [HttpGet("condition")]
+        public async Task<Object> GetBookByCondition([FromQuery(Name = "page")] int page, [FromQuery(Name = "searchKeyWords")] string searchKeyWords, [FromQuery(Name = "genre")]string genre, [FromQuery(Name = "author")]string author)
+        {
+            return await _bookRepository.GetBooksByConditionAsync(page, GlobalVariables.PageSize, searchKeyWords ?? "", genre ?? "", author ?? "");
         }
         // GET: api/Books/5
         [AllowAnonymous]
