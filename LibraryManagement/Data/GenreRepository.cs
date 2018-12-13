@@ -27,7 +27,12 @@ namespace LibraryManagement.Data
             var rs = genre.FirstOrDefault();
             //Get Details about genres
             if(rs != null)
-            rs.BookGenre = await RepositoryContext.BookGenre.Where(b => b.IdGenre == genreId).ToListAsync();
+            rs.BookGenre = await RepositoryContext.BookGenre.Where(b => b.IdGenre == genreId).Include(b => b.IdBookNavigation)
+                .ThenInclude(b => b.IdAuthorNavigation)
+                .Include(b => b.IdBookNavigation)
+                .ThenInclude(b=> b.BookGenre)               
+                .ThenInclude(b=> b.IdGenreNavigation)
+                .ToListAsync();
             return rs;
         }
 
@@ -57,7 +62,8 @@ namespace LibraryManagement.Data
             return await this.FindByCondition(genre => searchKeyWords.Trim().Length == 0 || genre.Name.ToLower().Contains(searchKeyWords.Trim().ToLower()))
 //                .Include(b => b.IdAuthorNavigation)
 //                .Include(b => b.BookGenre)
-//                .ThenInclude(b => b.IdGenreNavigation)
+//                .Include(b => b.BookGenre)
+//                .ThenInclude( b => b.IdBookNavigation)
                 .Skip(page * numPerPage)
                 .Take(numPerPage)
                 .ToListAsync();
